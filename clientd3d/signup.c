@@ -314,5 +314,5 @@ BOOL CALLBACK SignUpDialogProc(HWND hDlg, UINT message, UINT wParam, LONG lParam
 
 bool Signup::GetSignUp()
 {
-    return DialogBox(hInst, MAKEINTRESOURCE(IDD_SIGNUP), hMain, SignUpDialogProc) == IDCANCEL;
+    return DialogBox(hInst, MAKEINTRESOURCE(IDD_SIGNUP), hMain, (DLGPROC)SignUpDialogProc) == IDCANCEL;
 };

@@ -99,13 +99,13 @@ bool FindMatchingFiles(const char *path, const char *extension, std::vector<std:
 	path_spec.append("\\*");
 	path_spec.append(extension);
 	files->clear();
-	hFindFile = FindFirstFile(path_spec.c_str(), &search_data);
+	hFindFile = FindFirstFile((LPCWSTR)path_spec.c_str(), &search_data);
 	if (hFindFile == INVALID_HANDLE_VALUE)
 		return false;
    
 	do
 	{
-		files->push_back(search_data.cFileName);
+		files->push_back((char*)search_data.cFileName);
 	} while (FindNextFile(hFindFile,&search_data));
 	FindClose(hFindFile);
 	
@@ -114,12 +114,12 @@ bool FindMatchingFiles(const char *path, const char *extension, std::vector<std:
 
 bool BlakMoveFile(const char *source, const char *dest)
 {
-   if (!CopyFile(source,dest,FALSE))
+   if (!CopyFile((LPCWSTR)source,(LPCWSTR)dest,FALSE))
    {
       eprintf("BlakMoveFile error moving %s to %s (%s)\n",source,dest,GetLastErrorStr());
       return false;
    }
-   if (!DeleteFile(source))
+   if (!DeleteFile((LPCWSTR)source))
    {
       eprintf("BlakMoveFile error deleting %s (%s)\n",source,GetLastErrorStr());
       return false;

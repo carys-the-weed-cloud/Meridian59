@@ -5,9 +5,9 @@ TOPDIR=..
 
 SOURCEDIR = $(ROOMEDITDIR)\source
 RESDIR = $(ROOMEDITDIR)\res
-OWLSOURCEDIR = $(ROOMEDITDIR)\owl-6.43\source\owlcore
-OWLINCLUDEDIR = $(ROOMEDITDIR)\owl-6.43\include
-OWLOUTDIR = $(ROOMEDITDIR)\owl-6.43\$(OUTDIR)
+OWLSOURCEDIR = $(ROOMEDITDIR)\owl-6.44\source\owlcore
+OWLINCLUDEDIR = $(ROOMEDITDIR)\owl-6.44\include
+OWLOUTDIR = $(ROOMEDITDIR)\owl-6.44\$(OUTDIR)
 OWLLIBNAME = owl.lib
 
 # /GR: Needs RTTI
@@ -294,7 +294,7 @@ OWLOBJS = \
 	$(OWLOUTDIR)\owl.res
 
 {$(OWLSOURCEDIR)}.cpp{$(OWLOUTDIR)}.obj::
-	$(CC) $(CFLAGS) /FpCpch /Fd$(OWLOUTDIR)\vc90.pdb /Fo$(OWLOUTDIR)/ -c $< 
+	$(CC) $(CFLAGS) /FpCpch /Fd$(OWLOUTDIR)\vc140.pdb /Fo$(OWLOUTDIR)/ -c $< 
 
 {$(OWLSOURCEDIR)}.rc{$(OWLOUTDIR)}.res:
    $(RC) /i$(OWLINCLUDEDIR) /fo $@ $**
@@ -318,10 +318,10 @@ makedirs:
         -@mkdir $(OUTDIR)
 
 {$(SOURCEDIR)}.c{$(OUTDIR)}.obj::
-	$(CC) $(CFLAGS) /FpCpch /Fd$(OUTDIR)\vc90.pdb /Fo$(OUTDIR)/ -c $< 
+	$(CC) $(CFLAGS) /FpCpch /Fd$(OUTDIR)\vc140.pdb /Fo$(OUTDIR)/ -c $< 
 
 {$(SOURCEDIR)}.cpp{$(OUTDIR)}.obj::
-	$(CC) $(CFLAGS) /FpCpch /Fd$(OUTDIR)\vc90.pdb /Fo$(OUTDIR)/ -c $< 
+	$(CC) $(CFLAGS) /FpCpch /Fd$(OUTDIR)\vc140.pdb /Fo$(OUTDIR)/ -c $< 
 
 {$(SOURCEDIR)}.rc{$(OUTDIR)}.res:
         $(RC) /fo $@ /i$(SOURCEDIR) $**

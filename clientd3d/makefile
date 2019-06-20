@@ -21,18 +21,14 @@ LIBS =  \
 !ifdef RETAIL
 
 CFLAGS = $(CFLAGS) -DM59_RETAIL
-LIBS = $(LIBS) \
-       mss32.lib mss32midi.lib
-
+LIBS = $(LIBS) mss32.lib mss32midi.lib
 !endif
-
 
 DEFFILE  = $(SOURCEDIR)\client.def
 
 all: makedirs $(OUTDIR)\meridian.exe
 
-OBJS = \
-        $(OUTDIR)\client.obj \
+OBJS =  $(OUTDIR)\client.obj \
         $(OUTDIR)\list.obj \
         $(OUTDIR)\modules.obj \
         $(OUTDIR)\map.obj \
@@ -53,7 +49,6 @@ OBJS = \
         $(OUTDIR)\statconn.obj \
         $(OUTDIR)\memmap.obj \
         $(OUTDIR)\mapfile.obj \
-        $(OUTDIR)\fastasm.obj \
         $(OUTDIR)\boverlay.obj \
         $(OUTDIR)\web.obj \
         $(OUTDIR)\about.obj \
@@ -69,7 +64,7 @@ OBJS = \
         $(OUTDIR)\cursor.obj \
         $(OUTDIR)\client3d.obj \
         $(OUTDIR)\md5.obj \
-	     $(OUTDIR)\crc.obj \
+	    $(OUTDIR)\crc.obj \
         $(OUTDIR)\xlat.obj \
         $(OUTDIR)\rops.obj \
         $(OUTDIR)\guest.obj \
@@ -123,15 +118,13 @@ OBJS = \
         $(OUTDIR)\objdraw.obj \
         $(OUTDIR)\lagbox.obj \
         $(OUTDIR)\regexpr.obj \
-        $(OUTDIR)\fixed.obj \
         $(OUTDIR)\d3dcache.obj \
         $(OUTDIR)\d3ddriver.obj \
         $(OUTDIR)\d3dparticle.obj \
         $(OUTDIR)\d3drender.obj \
         $(OUTDIR)\matrix.obj \
         $(OUTDIR)\xform.obj \
-        $(OUTDIR)\signup.obj\
-
+        $(OUTDIR)\signup.obj
 
 $(OUTDIR)\trig.c $(OUTDIR)\trig.h: $(OUTDIR)\maketrig.exe
 	$(OUTDIR)\maketrig.exe $(OUTDIR)
@@ -140,10 +133,10 @@ $(OUTDIR)\pal.c: $(OUTDIR)\makepal.exe $(PALETTEFILE)
 	$(OUTDIR)\makepal $(PALETTEFILE) $(OUTDIR)
 
 $(OUTDIR)\crc.obj : $(TOPDIR)\util\crc.c
-	$(CC) -Fo$(OUTDIR)/ $(CFLAGS) /Fd$(OUTDIR)\vc90.pdb /FpCpch -c $**
+	$(CC) -Fo$(OUTDIR)/ $(CFLAGS) /Fd$(OUTDIR)\vc140.pdb /FpCpch -c $**
 
 $(OUTDIR)\md5.obj : $(TOPDIR)\util\md5.c
-	$(CC) -Fo$(OUTDIR)/ $(CFLAGS) /Fd$(OUTDIR)\vc90.pdb /FpCpch -c $**
+	$(CC) -Fo$(OUTDIR)/ $(CFLAGS) /Fd$(OUTDIR)\vc140.pdb /FpCpch -c $**
 
 $(OUTDIR)\meridian.exe: $(OBJS) $(DEFFILE) $(OUTDIR)\client.res
 	$(LINK) $(LINKFLAGS) @<<

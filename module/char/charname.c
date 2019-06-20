@@ -58,7 +58,7 @@ BOOL CALLBACK CharNameDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
       case PSN_APPLY:
 	 VerifySettings();
 	 // Don't quit dialog until we hear result from server
-	 SetWindowLong(hDlg, DWL_MSGRESULT, PSNRET_INVALID_NOCHANGEPAGE);
+	 SetWindowLongPtr(hDlg, DWLP_MSGRESULT, PSNRET_INVALID_NOCHANGEPAGE);
 	 break;
 
       }

@@ -73,7 +73,7 @@ Bool GraphCtlRegister(HINSTANCE hInst)
 
    if (!registered)
    {
-      wc.lpfnWndProc   = GraphCtlWndProc;
+      wc.lpfnWndProc   = (WNDPROC)GraphCtlWndProc;
       wc.cbClsExtra    = 0;
       wc.cbWndExtra    = sizeof(long);
       wc.hInstance     = hInst;

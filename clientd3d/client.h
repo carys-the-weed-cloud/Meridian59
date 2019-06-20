@@ -20,13 +20,13 @@
 #include "winxblak.h"
 #endif
 
-#include <assert.h>
-#include <stdio.h>
+#include <cassert>
+#include <cstdio>
 #include <malloc.h>
-#include <string.h>
+#include <string>
 #include <commdlg.h>
-#include <time.h>
-#include <stdarg.h>
+#include <ctime>
+#include <cstdarg>
 #include <fcntl.h>
 #include <io.h>
 #include <direct.h>
@@ -34,12 +34,11 @@
 #include <dlgs.h>
 #include <mmsystem.h>
 #include <winsock.h>
-#include <math.h>
+#include <cmath>
 #include <commctrl.h>
 #include <richedit.h>
 #include <process.h>
-#include <tchar.h>
-#include "wininet.h"
+#include <wininet.h>
 
 #include <d3d9.h>
 
@@ -59,6 +58,9 @@ enum {False = 0, True = 1};
 #define MAIN_DEF_TOP      0
 #define MAIN_DEF_WIDTH  693
 #define MAIN_DEF_HEIGHT 554
+
+/* The Lost defines */
+#define FIX_DECIMAL 32
 
 /* Timer identifiers */
 #define TIMER_ANIMATE   2
@@ -133,7 +135,6 @@ M59EXPORT void _cdecl dprintf(char *fmt,...);
 #include "object.h"
 #include "idlist.h"
 #include "annotate.h"
-#include "fixed.h"
 #include "draw3d.h"
 #include "animate.h"
 #include "roomanim.h"
@@ -153,7 +154,6 @@ M59EXPORT void _cdecl dprintf(char *fmt,...);
 #include "graphics.h"
 #include "drawbmp.h"
 #include "draw.h"
-#include "fixedpt.h"
 #include "trig.h"
 #include "login.h"
 #include "intrface.h"

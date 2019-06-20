@@ -180,7 +180,7 @@ void GameChangeColor(void)
    InvalidateRect(hMain, NULL, TRUE);
    
    EditBoxChangeColor();
-   DrawChangeColor();
+   //DrawChangeColor();
    OfferChangeColor();
 
    // Force a total redraw
@@ -551,7 +551,7 @@ void PerformAction(int action, void *action_data)
       break;
 
    case A_CHANGEPASSWORD:
-      DialogBox(hInst, MAKEINTRESOURCE(IDD_PASSWORD), hMain, PasswordDialogProc);
+      DialogBox(hInst, MAKEINTRESOURCE(IDD_PASSWORD), hMain, (DLGPROC)PasswordDialogProc);
       break;
 
    case A_TARGETPREVIOUS:

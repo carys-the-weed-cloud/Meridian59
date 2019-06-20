@@ -3344,7 +3344,7 @@ void D3DRenderNamesDraw3D(d3d_render_cache_system *pCacheSystem, d3d_render_pool
 		dx = pRNode->motion.x - params->viewer_x;
 		dy = pRNode->motion.y - params->viewer_y;
 
-		angle = (pRNode->angle - intATan2(-dy,-dx)) & NUMDEGREES_MASK;
+		angle = (long)(pRNode->angle - RadToDeg(atan2(-dy,-dx))) & NUMDEGREES_MASK;
 
 		pName = LookupNameRsc(pRNode->obj.name_res);
 		strLen = strlen(pName);
@@ -5170,18 +5170,18 @@ void D3DRenderFontInit(font_3d *pFont, HFONT hFont)
 {
 	D3DCAPS9		d3dCaps;
 	HDC				hDC;
-   HBITMAP			hbmBitmap;
+	HBITMAP			hbmBitmap;
 	DWORD			*pBitmapBits;
-   BITMAPINFO		bmi;
-   long x = 0;
-   long y = 0;
-   TCHAR			str[2] = _T("x");
-	TCHAR			c;
-   SIZE			size;
+	BITMAPINFO		bmi;
+	long x = 0;
+	long y = 0;
+	WCHAR			str[2] = L"x";
+	WCHAR			c;
+	SIZE			size;
 	D3DLOCKED_RECT	d3dlr;
-   BYTE			*pDstRow;
-   WORD			*pDst16;
-   BYTE			bAlpha;
+	BYTE			*pDstRow;
+	WORD			*pDst16;
+	BYTE			bAlpha;
   
 	pFont->fontHeight = GetFontHeight(hFont);
 //	pFont->flags = flags;
@@ -5248,7 +5248,7 @@ void D3DRenderFontInit(font_3d *pFont, HFONT hFont)
       int left_offset, right_offset;
       
       str[0] = c;
-      GetTextExtentPoint32(hDC, str, 1, &size);
+      GetTextExtentPoint32(hDC, (LPCSTR)str, 1, &size);
       
       if (!GetCharABCWidths(hDC, c, c, &pFont->abc[c-32])) {
          pFont->abc[c-32].abcA = 0;
@@ -5266,7 +5266,7 @@ void D3DRenderFontInit(font_3d *pFont, HFONT hFont)
          y += size.cy + 1;
       }
       
-      temp = ExtTextOut(hDC, x + left_offset, y+0, ETO_OPAQUE, NULL, str, 1, NULL);
+      temp = ExtTextOut(hDC, x + left_offset, y+0, ETO_OPAQUE, NULL, (LPCSTR)str, 1, NULL);
       
       pFont->texST[c-32][0].s = ((FLOAT)(x+0)) / pFont->texWidth;
       pFont->texST[c-32][0].t = ((FLOAT)(y+0)) / pFont->texHeight;
@@ -6716,7 +6716,7 @@ void D3DRenderObjectsDraw(d3d_render_pool_new *pPool, room_type *room,
 		dx = pRNode->motion.x - params->viewer_x;
 		dy = pRNode->motion.y - params->viewer_y;
 
-		angle = (pRNode->angle - intATan2(-dy,-dx)) & NUMDEGREES_MASK;
+		angle = (long)(pRNode->angle - RadToDeg(atan2(-dy,-dx))) & NUMDEGREES_MASK;
 
 		pDib = GetObjectPdib(pRNode->obj.icon_res, angle, pRNode->obj.animate->group);
 
@@ -7244,7 +7244,7 @@ void D3DRenderOverlaysDraw(d3d_render_pool_new *pPool, room_type *room, Draw3DPa
 				dx = pRNode->motion.x - params->viewer_x;
 				dy = pRNode->motion.y - params->viewer_y;
 
-				angle = (pRNode->angle - intATan2(-dy,-dx)) & NUMDEGREES_MASK;
+				angle = (long)(pRNode->angle - RadToDeg(atan2(-dy,-dx))) & NUMDEGREES_MASK;
 
 				pDib = GetObjectPdib(pRNode->obj.icon_res, angle, pRNode->obj.animate->group);
 				pDibOv = GetObjectPdib(pOverlay->icon_res, angle, pOverlay->animate.group);
@@ -7883,7 +7883,7 @@ void D3DRenderProjectilesDrawNew(d3d_render_pool_new *pPool, room_type *room, Dr
 		dx = pProjectile->motion.x - params->viewer_x;
 		dy = pProjectile->motion.y - params->viewer_y;
 
-		angle = (pProjectile->angle - intATan2(-dy,-dx)) & NUMDEGREES_MASK;
+		angle = (long)(pProjectile->angle - RadToDeg(atan2(-dy,-dx))) & NUMDEGREES_MASK;
 
 		pDib = GetObjectPdib(pProjectile->icon_res, angle, pProjectile->animate.group);
 

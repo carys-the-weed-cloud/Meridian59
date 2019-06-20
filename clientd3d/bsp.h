@@ -91,7 +91,7 @@ typedef struct
 /* 3D plane defined by ax + by + cz + d */
 typedef struct
 {
-    FixedPoint a, b, c, d;
+    long a, b, c, d;
 } Plane3D;
 
 /* box defined by its top left and bottom right coordinates (in fineness) */
@@ -107,7 +107,7 @@ typedef struct
 
 typedef struct
 {
-   FixedPoint x,y,z;
+   long x,y,z;
 } Pnt3D,Vector3D;
 
 typedef struct ObjectData
@@ -129,9 +129,9 @@ typedef struct {
     Pnt3D	h;	       /* h, v, o : values for texturing surface from current viewpoint */
     Pnt3D	v;
     Pnt3D	o;
-    FixedPoint  z0;	       /* distances for viewer light calculation */
-    FixedPoint  z_du;
-    FixedPoint  z_dv;
+    long  z0;	       /* distances for viewer light calculation */
+    long  z_du;
+    long  z_dv;
 	long	texRot;			// new client needs the raw rotation angle
     short	flags;	       /* flags about properties of this surface */
     short       lightscale;    /* scaling factor for directional lighting */

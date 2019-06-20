@@ -172,7 +172,7 @@ BOOL LookInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
    }
    
    // Draw objects in owner-drawn list box
-   SetWindowLong(info->hwndListBox, GWL_USERDATA, OD_DRAWOBJ);
+   SetWindowLongPtr(info->hwndListBox, GWLP_USERDATA, OD_DRAWOBJ);
    
    SetWindowText(hDlg, info->title);  /* Set window's title */
 
@@ -484,7 +484,7 @@ Bool InputNumber(HWND hParent, HWND hwnd, int x, int y, int *returnValue, int st
    dlg_info.maxAmount = maxValue;
    
    if (IDCANCEL == DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_AMOUNT), hParent,
-      AmountDialogProc, (LPARAM) &dlg_info))
+      (DLGPROC)AmountDialogProc, (LPARAM) &dlg_info))
       return False;  /* Don't select item */
 
    *returnValue = dlg_info.amount;
@@ -626,14 +626,14 @@ list_type DisplayLookList(HWND hParent, char *title, list_type l, int flags)
    /* If multiple selections allowed, make list box multiple select */
    if (flags & LD_MULTIPLESEL)
       valid = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_ITEMLISTMULTIPLE), hParent,
-			     LookDialogProc, (LPARAM) &dlg_info);
+			     (DLGPROC)LookDialogProc, (LPARAM) &dlg_info);
    else 
       if (flags & LD_SORT)
 	 valid = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_ITEMLISTSORTED), hParent,
-				LookDialogProc, (LPARAM) &dlg_info);
+				(DLGPROC)LookDialogProc, (LPARAM) &dlg_info);
       else
 	 valid = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_ITEMLISTSINGLE), hParent,
-				LookDialogProc, (LPARAM) &dlg_info);
+				(DLGPROC)LookDialogProc, (LPARAM) &dlg_info);
 
    if( info != NULL )
    {

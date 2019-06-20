@@ -18,9 +18,9 @@
 // new border colors for grey background in new client - mistery
 #define HIGHLIGHT_INDEX 195
 
-Bool DrawInitialize(void);
-void DrawClose(void);
-void DrawChangeColor(void);
+Bool DrawInitialize();
+void DrawClose();
+//void DrawChangeColor();
 
 PDIB GetObjectPdib(ID id, long angle, int group);
 PDIB GetGridPdib(WORD grid_id);

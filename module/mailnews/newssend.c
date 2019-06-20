@@ -46,7 +46,7 @@ Bool UserPostArticle(HWND hParent, WORD newsgroup, ID name_rsc, char *title)
    s.subject = title;
    s.group_name_rsc = name_rsc;
    retval = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_NEWSPOST), hParent,
-			   PostNewsDialogProc, (LPARAM) &s);
+			   (DLGPROC)PostNewsDialogProc, (LPARAM) &s);
 
    if (retval == IDOK)
       return True;

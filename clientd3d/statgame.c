@@ -16,7 +16,7 @@
 static int game_state = GAME_NONE;
 
 /****************************************************************************/
-void GameInit(void)
+void GameInit()
 {
    LoadProfaneTerms();
 
@@ -45,7 +45,7 @@ void GameInit(void)
    InvalidateRect(hMain, NULL, TRUE);
 }
 /****************************************************************************/
-void GameExit(void)
+void GameExit()
 {
    timeEndPeriod(1);
 
@@ -133,7 +133,7 @@ void GameSetState(int new_state)
    ModuleEvent(EVENT_STATECHANGED, old_state, new_state);
 }
 /************************************************************************/
-int GameGetState(void)
+int GameGetState()
 {
    return game_state;
 }
@@ -284,7 +284,7 @@ void GameTimer(HWND hwnd, UINT id)
    }
 }
 /****************************************************************************/
-void GameIdle(void)
+void GameIdle()
 {
    MoveUpdateServer();       // Update our position on server, if necessary
 
@@ -296,7 +296,7 @@ void GameIdle(void)
 
    // If animation is off, or we're in the background, sleep to lower CPU load
    if (!config.animate ||
-       GetWindowLong(GetActiveWindow(), GWL_HINSTANCE) != (LONG)hInst)
+       GetWindowLongPtr(GetActiveWindow(), GWLP_HINSTANCE) != (LONG)hInst)
    {
       AnimationSleep();
    }

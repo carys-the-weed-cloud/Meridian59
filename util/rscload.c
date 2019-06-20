@@ -2,7 +2,7 @@
  * rscload.c:  Load a rsc file, and call a function for each loaded resource.
  */
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "rscload.h"
 

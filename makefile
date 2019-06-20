@@ -8,7 +8,7 @@ TOPDIR=.
 .SILENT:
 
 # make ignores targets if they match directory names
-all: Bserver Bclient Bmodules Bkod Bdeco Bupdater Bbbgun Bresource Broomedit
+all: Bserver Bclient Bmodules Bkod Bdeco Bupdater Bbbgun Bresource #Broomedit
 
 Bserver:
 	echo Making in $(BLAKSERVDIR)
@@ -112,11 +112,11 @@ Bkeybind:
 	$(MAKE) /$(MAKEFLAGS) $(COMMAND)
 	cd ..
 
-Broomedit:
-	echo Making $(COMMAND) in $(ROOMEDITDIR)
-	cd $(ROOMEDITDIR)
-	$(MAKE) /$(MAKEFLAGS) $(COMMAND)
-	cd ..
+#Broomedit:
+#	echo Making $(COMMAND) in $(ROOMEDITDIR)
+#	cd $(ROOMEDITDIR)
+#	$(MAKE) /$(MAKEFLAGS) $(COMMAND)
+#	cd ..
 
 clean:
         set COMMAND=clean

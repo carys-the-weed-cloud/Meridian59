@@ -24,7 +24,7 @@ static int timer_id;            // id of ping timer, 0 if none
  */
 void PingTimerStart(void)
 {
-   timer_id = SetTimer(NULL, 0, (UINT) PING_DELAY, PingTimerProc);
+   timer_id = SetTimer(NULL, 0, (UINT) PING_DELAY, (TIMERPROC)PingTimerProc);
 }
 /****************************************************************************/
 /*

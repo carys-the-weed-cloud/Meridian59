@@ -147,7 +147,7 @@ int ClientMessageBox(HWND hwndParent, const char *text, char *title, UINT style)
    s.style = style;
 
    retval = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_MSGBOX), hwndParent, 
-			   ClientMsgBoxProc, (LPARAM) &s);
+			   (DLGPROC)ClientMsgBoxProc, (LPARAM) &s);
    box_up = False;
    return retval;
 } 

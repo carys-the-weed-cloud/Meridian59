@@ -24,7 +24,7 @@ void LogoffTimerReset(void);
 /****************************************************************************/
 void UserSetTimeout(void)
 {
-   DialogBox(hInst, MAKEINTRESOURCE(IDD_TIMEOUT), hMain, TimeoutDialogProc);
+   DialogBox(hInst, MAKEINTRESOURCE(IDD_TIMEOUT), hMain, (DLGPROC)TimeoutDialogProc);
 }
 /****************************************************************************/
 BOOL CALLBACK TimeoutDialogProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)
@@ -118,7 +118,7 @@ void LogoffTimerStart(void)
       return;
 
    delay = (UINT) (min((long) ((long) config.timeout * MS_PER_MINUTE), MAXTIMERMS));
-   timer_id = SetTimer(NULL, 0, (UINT) delay, LogoffTimerProc);
+   timer_id = SetTimer(NULL, 0, (UINT) delay, (TIMERPROC)LogoffTimerProc);
    if (timer_id == 0)
    {
       ClientError(hInst, hMain, IDS_NOTIMERS);
@@ -165,7 +165,7 @@ void CALLBACK LogoffTimerProc(HWND hwnd, UINT msg, UINT timer, DWORD dwTime)
 
    /* Restart timer */
    delay = (UINT) (min((long) config.timeout * MS_PER_MINUTE - elapsed, MAXTIMERMS));
-   timer_id = SetTimer(NULL, 0, (UINT) delay, LogoffTimerProc);   
+   timer_id = SetTimer(NULL, 0, (UINT) delay, (TIMERPROC)LogoffTimerProc);
    if (timer_id == 0)
       ClientError(hInst, hMain, IDS_NOTIMERS);
 }

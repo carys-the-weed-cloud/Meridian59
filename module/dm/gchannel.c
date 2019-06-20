@@ -32,7 +32,7 @@ void ShowGChannelDlg()
    {
       debug(("ShowGChannelDlg needs to create the dialog\n"));
       hGChannelDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_GCHANNEL),
-                                  cinfo->hMain, GChannelDialogProc);
+                                  cinfo->hMain, (DLGPROC)GChannelDialogProc);
    }
 
    if (hGChannelDlg)

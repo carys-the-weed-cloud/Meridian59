@@ -28,7 +28,7 @@ void GuildHallsReceived(WORD init_num_halls, GuildHall *init_halls)
 {
    num_halls = init_num_halls;
    halls = init_halls;
-   DialogBox(hInst, MAKEINTRESOURCE(IDD_GUILDHALLS), cinfo->hMain, GuildHallsDialogProc);
+   DialogBox(hInst, MAKEINTRESOURCE(IDD_GUILDHALLS), cinfo->hMain, (DLGPROC)GuildHallsDialogProc);
    SafeFree(halls);
 }
 /*****************************************************************************/

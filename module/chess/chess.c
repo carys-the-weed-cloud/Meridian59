@@ -110,7 +110,7 @@ void WINAPI GetModuleInfo(ModuleInfo *info, ClientInfo *client_info)
 						      
    game_obj = 0;
    BoardBitmapsLoad();
-   hChessDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_CHESS), c->hMain, ChessDialogProc);
+   hChessDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_CHESS), c->hMain, (DLGPROC)ChessDialogProc);
 
    exiting = False;
 }
@@ -564,7 +564,7 @@ void ChessDlgShowMessage(char *message)
  */
 BYTE ChessGetPromotionPiece(void)
 {
-   return DialogBox(hInst, MAKEINTRESOURCE(IDD_PROMOTION), hChessDlg, ChessPromotionDialogProc);
+   return DialogBox(hInst, MAKEINTRESOURCE(IDD_PROMOTION), hChessDlg, (DLGPROC)ChessPromotionDialogProc);
 }
 /********************************************************************/
 BOOL CALLBACK ChessPromotionDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)

@@ -287,7 +287,7 @@ void UserSelectFont(WORD font)
    memset(&cf, 0, sizeof(CHOOSEFONT));
    cf.lStructSize = sizeof(CHOOSEFONT);
    cf.hwndOwner   = hMain;
-   cf.lpfnHook    = ChooseFontHookProc;
+   cf.lpfnHook    = (LPCFHOOKPROC)ChooseFontHookProc;
    cf.lpLogFont   = &newfont;
    cf.Flags       = CF_SCREENFONTS | CF_ENABLEHOOK | CF_INITTOLOGFONTSTRUCT | CF_EFFECTS;
    if (ChooseFont(&cf) == 0)

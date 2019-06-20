@@ -46,7 +46,7 @@ void UserSendMail(void)
       return;
    }
 
-   CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_MAILSEND), NULL, SendMailDialogProc,
+   CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_MAILSEND), NULL, (DLGPROC)SendMailDialogProc,
 		     (LPARAM) NULL);
 }
 /****************************************************************************/
@@ -74,7 +74,7 @@ void MailSendReply(HWND hParent, MailInfo *reply)
      }
 
    CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_MAILSEND), NULL, 
-		     SendMailDialogProc, (LPARAM) reply);
+		     (DLGPROC)SendMailDialogProc, (LPARAM) reply);
 }
 /****************************************************************************/
 BOOL CALLBACK SendMailDialogProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)

@@ -134,7 +134,7 @@ void InventoryBoxCreate(HWND hParent)
 	LOGBRUSH logbrush;
 
    hwndInvDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_INVENTORY), 
-				hParent, InventoryDialogProc);
+				hParent, (DLGPROC)InventoryDialogProc);
 
    hwndInv = CreateWindow("button", NULL, 
 			  WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,

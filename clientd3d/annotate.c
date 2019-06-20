@@ -172,7 +172,7 @@ void MapAnnotationClick(int x, int y)
   }
 
   if (DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_ANNOTATE), hMain,
-		     MapAnnotationDialogProc, (LPARAM) index) == IDOK)
+		     (DLGPROC)MapAnnotationDialogProc, (LPARAM) index) == IDOK)
     {
       current_room.annotations_changed = True;
       if (!existed)

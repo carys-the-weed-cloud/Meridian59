@@ -537,11 +537,11 @@ void CommandAliasCommon(char *args, DLGPROC pfnAliasDialogProc, int idDialog)
 }
 void CommandVerbAlias(char *args)
 {
-   CommandAliasCommon(args, VerbAliasDialogProc, IDD_CMDALIAS);
+   CommandAliasCommon(args, (DLGPROC)VerbAliasDialogProc, IDD_CMDALIAS);
 }
 void CommandAlias(char *args)
 {
-   CommandAliasCommon(args, AliasDialogProc, IDD_ALIAS);
+   CommandAliasCommon(args, (DLGPROC)AliasDialogProc, IDD_ALIAS);
 }
 /*****************************************************************************/
 /*
@@ -600,7 +600,7 @@ BOOL CALLBACK AliasDialogProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)
 
       case IDC_TUNNEL:
 	 if (!hAliasDialog2 &&
-	     IDOK == DialogBox(hInst, MAKEINTRESOURCE(IDD_CMDALIAS), hDlg, VerbAliasDialogProc))
+	     IDOK == DialogBox(hInst, MAKEINTRESOURCE(IDD_CMDALIAS), hDlg, (DLGPROC)VerbAliasDialogProc))
 	 {
 	    AliasSave();
 	    SetFocus(GetDlgItem(hDlg, IDOK));
@@ -938,7 +938,7 @@ BOOL CALLBACK VerbAliasDialogProc(HWND hDlg, UINT message, UINT wParam, LONG lPa
 
       case IDC_TUNNEL:
 	 if (!hAliasDialog1 &&
-	     IDOK == DialogBox(hInst, MAKEINTRESOURCE(IDD_ALIAS), hDlg, AliasDialogProc))
+	     IDOK == DialogBox(hInst, MAKEINTRESOURCE(IDD_ALIAS), hDlg, (DLGPROC)AliasDialogProc))
 	 {
 	    AliasSave();
 	    SetFocus(GetDlgItem(hDlg, IDOK));

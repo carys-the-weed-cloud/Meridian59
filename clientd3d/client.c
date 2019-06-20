@@ -10,7 +10,7 @@
 *
 */
 
-#include <assert.h>
+#include <cassert>
 #include <crtdbg.h>
 
 #include "client.h"
@@ -58,8 +58,8 @@ static unsigned short crc16( char *name)
 
 	unsigned short retval;
 
-	fp=fopen(name,"rb");
-	if( fp == NULL) {
+	retval=fopen_s(&fp,name,"rb");
+	if( retval != 0) {
 		return 98;
 	}
 
@@ -215,7 +215,7 @@ void RegisterWindowClasses(void)
 	/* Main window class */
 	wndclassex.cbSize        = sizeof(WNDCLASSEX);
 	wndclassex.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS | CS_OWNDC;
-	wndclassex.lpfnWndProc   = WndProc;
+	wndclassex.lpfnWndProc   = (WNDPROC)WndProc;
 	wndclassex.cbClsExtra    = 0;
 	wndclassex.cbWndExtra    = 0;
 	wndclassex.hInstance     = hInst;

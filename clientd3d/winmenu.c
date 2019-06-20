@@ -115,7 +115,7 @@ void MenuCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
       break;
 
    case ID_GAME_SETTINGS:
-      if (DialogBox(hInst, MAKEINTRESOURCE(IDD_SETTINGS), hMain, PreferencesDialogProc) == IDOK)
+      if (DialogBox(hInst, MAKEINTRESOURCE(IDD_SETTINGS), hMain, (DLGPROC)PreferencesDialogProc) == IDOK)
       {
          ModuleEvent(EVENT_CONFIGCHANGED);
          MenuDisplaySettings(hMain);
@@ -246,7 +246,7 @@ void MenuCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
       StartHelp();
       break;
    case ID_HELP_ABOUT:
-      DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUT), hMain, AboutDialogProc);
+      DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUT), hMain, (DLGPROC)AboutDialogProc);
       break;
 
    }

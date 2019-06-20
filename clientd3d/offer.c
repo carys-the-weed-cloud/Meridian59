@@ -45,8 +45,8 @@ BOOL CALLBACK SendOfferDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM
       SendMessage(hDlg, BK_SETDLGFONTS, 0, 0);
 
       // Set up owner drawn boxes
-      SetWindowLong(hwndSend, GWL_USERDATA, OD_DRAWOBJ);
-      SetWindowLong(hwndReceive, GWL_USERDATA, OD_DRAWOBJ);
+      SetWindowLongPtr(hwndSend, GWLP_USERDATA, OD_DRAWOBJ);
+      SetWindowLongPtr(hwndReceive, GWLP_USERDATA, OD_DRAWOBJ);
 
       SendInfo = (SendOfferDialogStruct *) lParam;
       
@@ -174,8 +174,8 @@ BOOL CALLBACK RcvOfferDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
       SendMessage(hDlg, BK_SETDLGFONTS, 0, 0);
 
       // Set up owner drawn boxes
-      SetWindowLong(hwndSend, GWL_USERDATA, OD_DRAWOBJ);
-      SetWindowLong(hwndReceive, GWL_USERDATA, OD_DRAWOBJ);
+      SetWindowLongPtr(hwndSend, GWLP_USERDATA, OD_DRAWOBJ);
+      SetWindowLongPtr(hwndReceive, GWLP_USERDATA, OD_DRAWOBJ);
 
       RcvInfo = (RcvOfferDialogStruct *) lParam;
 
@@ -183,7 +183,7 @@ BOOL CALLBACK RcvOfferDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
       ItemListSetContents(hwndReceive, RcvInfo->items, True);
 
       /* Subclass list boxes */
-      lpfnDefListProc = (WNDPROC) GetWindowLong(hwndSend, GWL_WNDPROC);
+      lpfnDefListProc = (WNDPROC) GetWindowLongPtr(hwndSend, GWLP_WNDPROC);
       SubclassWindow(hwndSend, OfferListProc);
       SubclassWindow(hwndReceive, OfferListProc);
 
@@ -393,7 +393,7 @@ void ReceiveOffer(ID obj_id, ID icon_res, ID name_res, list_type items)
    /* Create offer dialog hidden, but restore focus to original window */
    hwndFocus = GetFocus();
    CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_OFFERRECEIVE), 
-		     NULL, RcvOfferDialogProc, (LPARAM) &info);
+		     NULL, (DLGPROC)RcvOfferDialogProc, (LPARAM) &info);
    SetFocus(hwndFocus);
 }
 /************************************************************************/

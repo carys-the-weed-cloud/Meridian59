@@ -45,7 +45,7 @@ void GuildCreate(int cost1, int cost2)
 {
   non_secret_cost = cost1;
   secret_cost = cost2;
-  DialogBox(hInst, MAKEINTRESOURCE(IDD_GUILDCREATE), cinfo->hMain, GuildCreateDialogProc);
+  DialogBox(hInst, MAKEINTRESOURCE(IDD_GUILDCREATE), cinfo->hMain, (DLGPROC)GuildCreateDialogProc);
 }
 /*****************************************************************************/
 /*

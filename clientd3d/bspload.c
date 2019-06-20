@@ -423,20 +423,14 @@ Bool LoadSidedefs(file_node *f, room_type *room, int num_sidedefs)
 //  setting up the slope info records easier.
 	
 /* returns squared length of input vector */	
-FixedPoint V3SquaredLength(Vector3D *a) {
-    FixedPoint s2;
-
-    s2 = fpSquare(a->x) + fpSquare(a->y) + fpSquare(a->z);
-    
-    return(s2);
+long V3SquaredLength(Vector3D *a) {
+    return (pow(a->x, 2) + pow(a->y, 2) + pow(a->z, 2));
 }
 
 /* returns length of input vector */
-FixedPoint V3Length(Vector3D *a) 
+long V3Length(Vector3D *a) 
 {
-   FixedPoint s2 = V3SquaredLength(a);
-   FixedPoint s = fpSqrt(s2);
-   return(s);
+   return(sqrt(V3SquaredLength(a)));
 }
 
 /* return vector sum c = a+b */
@@ -450,22 +444,22 @@ Vector3D *V3Add(Vector3D *a, Vector3D *b, Vector3D *c) {
 
 /* return the cross product c = a cross b */
 Vector3D *V3Cross(Vector3D *a, Vector3D *b, Vector3D *c) {
-    c->x = fpMul(a->y, b->z) - fpMul(a->z, b->y);
-    c->y = fpMul(a->z, b->x) - fpMul(a->x, b->z);
-    c->z = fpMul(a->x, b->y) - fpMul(a->y, b->x);
+    c->x = (a->y * b->z) - (a->z * b->y);
+    c->y = (a->z * b->x) - (a->x * b->z);
+    c->z = (a->x * b->y) - (a->y * b->x);
     return(c);
 }
 
 /* scales the input vector to the new length and returns it */
-Vector3D *V3Scale(Vector3D *v, FixedPoint newlen) {
-    FixedPoint len;
+Vector3D *V3Scale(Vector3D *v, long newlen) {
+    long len;
     
     len = V3Length(v);
     
     if (len != 0.0) {
-	v->x = mulDiv(v->x,newlen,len);
-	v->y = mulDiv(v->y,newlen,len);
-	v->z = mulDiv(v->z,newlen,len);
+	v->x = (v->x * newlen) / len;
+	v->y = (v->y * newlen) / len;
+	v->z = (v->z * newlen) / len;
     }
     return(v);
 }
@@ -523,8 +517,8 @@ SlopeData *LoadSlopeInfo(file_node *f) {
 	new_slope->texRot = txt_angle;
     
     // convert angle to vector
-    texture_orientation.x = COS(txt_angle) >> 6;
-    texture_orientation.y = SIN(txt_angle) >> 6;
+    texture_orientation.x = (long)cos(txt_angle) >> 6;
+    texture_orientation.y = (long)sin(txt_angle) >> 6;
     texture_orientation.z = 0;
 
     // generate other endpoints from plane normal, texture origin, and texture

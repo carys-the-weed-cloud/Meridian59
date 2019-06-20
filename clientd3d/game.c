@@ -632,7 +632,7 @@ void GamePlaySound(ID sound_rsc, ID source_obj, BYTE flags, WORD y, WORD x, WORD
 	 dy = ( p->motion.y >> LOG_FINENESS ) - y;
       }
       //distance = GetLongSqrt(dx * dx + dy * dy);
-      distance = Distance(dx, dy);
+      distance = sqrt(pow(dx,2) + pow(dy,2));
       if (distance < cutoff)
       {
 	 volume = maxvolume - (distance * maxvolume / cutoff) ;
@@ -684,7 +684,7 @@ int ComputeObjectDistance(room_contents_node *r1, room_contents_node *r2)
 {
    int dx = (r1->motion.x - r2->motion.x) >> 4;
    int dy = (r1->motion.y - r2->motion.y) >> 4;
-   return Distance(dx,dy) << 4;
+   return (int)sqrt(pow(dx, 2) + pow(dy, 2)) << 4;
 }
 
 player_info *GetPlayerInfo(void)

@@ -3,7 +3,7 @@
 TOPDIR=..
 !include $(TOPDIR)\common.mak
 
-LINKFLAGS = $(LINKFLAGS) /SUBSYSTEM:CONSOLE",5.01"
+LINKFLAGS = $(LINKFLAGS) /SUBSYSTEM:CONSOLE",6.00"
 
 OBJS = \
     $(OUTDIR)\png.obj \

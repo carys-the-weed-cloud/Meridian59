@@ -10,7 +10,7 @@ BLAKSERVLINKFLAGS = /STACK:0x180000 /map /debug $(LINKWINDOWSFLAGS)
 
 SOURCEDIR = .
 
-LIBS = gdi32.lib user32.lib wsock32.lib winmm.lib comctl32.lib
+LIBS = gdi32.lib user32.lib wsock32.lib winmm.lib comctl32.lib ws2_32.lib
 
 OBJS =  \
 	$(OUTDIR)\main.obj \
@@ -86,16 +86,16 @@ OBJS =  \
 all : makedirs $(OUTDIR)\blakserv.exe
 
 $(OUTDIR)\rscload.obj : $(TOPDIR)\util\rscload.c
-	$(CC) -Fo$(OUTDIR)/ $(CFLAGS) /Fd$(OUTDIR)\vc90.pdb /FpCpch -c $**
+	$(CC) -Fo$(OUTDIR)/ $(CFLAGS) /Fd$(OUTDIR)\vc140.pdb /FpCpch -c $**
 
 $(OUTDIR)\crc.obj : $(TOPDIR)\util\crc.c
-	$(CC) -Fo$(OUTDIR)/ $(CFLAGS) /Fd$(OUTDIR)\vc90.pdb /FpCpch -c $**
+	$(CC) -Fo$(OUTDIR)/ $(CFLAGS) /Fd$(OUTDIR)\vc140.pdb /FpCpch -c $**
 
 $(OUTDIR)\md5.obj : $(TOPDIR)\util\md5.c
-	$(CC) -Fo$(OUTDIR)/ $(CFLAGS) /Fd$(OUTDIR)\vc90.pdb /Fpmd5pch -c $**
+	$(CC) -Fo$(OUTDIR)/ $(CFLAGS) /Fd$(OUTDIR)\vc140.pdb /Fpmd5pch -c $**
 
 $(OUTDIR)\blakserv.exe: $(OBJS) $(OUTDIR)\blakserv.res
-	$(CC) $(CFLAGS) -Fo$(OUTDIR)/ /FpCpch /Fd$(OUTDIR)\vc90.pdb -c $(SOURCEDIR)\version.c
+	$(CC) $(CFLAGS) -Fo$(OUTDIR)/ /FpCpch /Fd$(OUTDIR)\vc142.pdb -c $(SOURCEDIR)\version.c
 	$(LINK)	$** $(LIBS) -OUT:$@ $(BLAKSERVLINKFLAGS) $(LINKFLAGS)
 	$(CP) $@ $(BLAKSERVRUNDIR)
 

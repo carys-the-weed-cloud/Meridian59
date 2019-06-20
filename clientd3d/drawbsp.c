@@ -193,8 +193,8 @@ static Bool AddObject(BSPnode *tree, ObjectData *object)
 	 else
 	 {   /* object segment crosses separator! */
 	    double f = ((double)side0) / (side0 - side1);
-	    long xmid = FloatToInt(object->x0 + f * (object->x1 - object->x0));
-	    long ymid = FloatToInt(object->y0 + f * (object->y1 - object->y0));
+	    long xmid = (object->x0 + f * (object->x1 - object->x0));
+	    long ymid = (object->y0 + f * (object->y1 - object->y0));
 	    ObjectData *copy;
 	    
 	    if (nobjects >= MAXOBJECTS)
@@ -423,7 +423,7 @@ static void AddObjects(room_type *room)
 	continue;
       
       /* compute angle that object is viewed at */
-      angle = (r->angle - intATan2(-dy,-dx)) & NUMDEGREES_MASK;
+      angle = (long)(r->angle - RadToDeg(atan2(-dy, -dx))) & NUMDEGREES_MASK;
 
       /* compute width of bitmap from this angle */
       if (!GetObjectSize(r->obj.icon_res, r->obj.animate->group, angle, *(r->obj.overlays), 
@@ -551,7 +551,7 @@ static void AddObjects(room_type *room)
 	continue;
       
       /* compute angle that projectile is viewed at */
-      angle = (proj->angle - intATan2(-dy,-dx)) & NUMDEGREES_MASK;
+      angle = (long)(proj->angle - RadToDeg(atan2(-dy,-dx))) & NUMDEGREES_MASK;
 
       /* find width of bitmap */
       if (!GetObjectSize(proj->icon_res, proj->animate.group, angle, NULL, &width, &height))
@@ -1685,11 +1685,6 @@ int world_to_screen(long x0, long y0, long x1, long y1,
   if (*d0 <= 0) *d0 = 1;
   if (*d1 <= 0) *d1 = 1;
   
-#if 0
-  debug(("converted (%d %d)-(%d %d),(%d) to (%d %d)-(%d %d))\n",
-	  x0+viewer_x,y0+viewer_y,x1+viewer_x,y1+viewer_y,h,
-	  *col0,*row0,*col1,*row1);
-#endif
   return 1;
 }
 
@@ -2027,10 +2022,6 @@ static void WalkWall(WallData *wall, long side)
    if (sidedef == NULL)
        return;
 
-#if 0
-   debug(("WalkWall %d %d %d %d\n",wall->x0,wall->y0,wall->x1,wall->y1));
-#endif
-   
    z0 = wall->z0;
    zz0 = wall->zz0;
    z1 = wall->z1;
@@ -2107,10 +2098,6 @@ static void WalkWall(WallData *wall, long side)
 
    col1--;  /* fix overlap! */
    if (col1 < col0) return;
-
-#if 0
-   debug(("WalkWall %d %d\n",col0,col1));
-#endif
 
    // Look for lower wall
    if (sidedef->below_bmap != NULL && ((z1 != z0)||(zz1 != zz0))) {
@@ -2388,13 +2375,6 @@ static void WalkLeaf(BSPleaf *leaf)
    Vector3D surface_norm;
    long lightscale;
    
-#if 0
-   debug(("WalkLeaf"));
-   for(i=0; i<leaf->poly.npts; i++)
-     debug((" %d %d", leaf->poly.p[i].x, leaf->poly.p[i].y));
-   debug(("\n"));
-#endif
-   
    if (leaf->objects)
       WalkObjects(leaf->objects);
    
@@ -2419,7 +2399,7 @@ static void WalkLeaf(BSPleaf *leaf)
 	   lightscale = (surface_norm.x*sun_vect.x + surface_norm.y*sun_vect.y + surface_norm.z*sun_vect.z)>>LOG_FINENESS;
 
 #if PERPENDICULAR_DARK
-	   lightscale = ABS(lightscale);
+	   lightscale = abs(lightscale);
 #else
 	   lightscale = (lightscale + FINENESS)>>1; // map to 0 to 1 range
 #endif
@@ -2447,7 +2427,7 @@ static void WalkLeaf(BSPleaf *leaf)
 	   lightscale = (surface_norm.x*sun_vect.x + surface_norm.y*sun_vect.y + surface_norm.z*sun_vect.z)>>LOG_FINENESS;
 
 #if PERPENDICULAR_DARK
-	   lightscale = ABS(lightscale);
+	   lightscale = abs(lightscale);
 #else
 	   lightscale = (lightscale + FINENESS)>>1; // map to 0 to 1 range
 #endif
@@ -2652,7 +2632,7 @@ static void WalkBSPtree(BSPnode *tree)
 	  lightscale = (a*sun_vect.x + b*sun_vect.y)>>LOG_FINENESS;
 
 #if PERPENDICULAR_DARK
-	  lightscale = ABS(lightscale);
+	  lightscale = abs(lightscale);
 #else
 	  lightscale = (lightscale + FINENESS)>>1; // map to 0 to 1 range
 #endif
@@ -2725,8 +2705,8 @@ void MinimapUpdate(Draw3DParams *params, BSPnode *tree)
 
 	// find equations that bound viewing frustum
 	// keep 10 = FIX_DECIMAL-6 bits of accuracy
-	center_a = COS(viewer_angle) >> 6;
-	center_b = SIN(viewer_angle) >> 6;
+	center_a = cos(viewer_angle) >> 6;
+	center_b = sin(viewer_angle) >> 6;
 
 	left_a = -center_b + ((center_a * screen_width2) >> LOG_VIEWER_DISTANCE);
 	left_b =  center_a + ((center_b * screen_width2) >> LOG_VIEWER_DISTANCE);
@@ -2780,11 +2760,6 @@ static void outlinecone(ViewCone *c)
 {
   int row,col;
   int minrow,maxrow;
-#if 0
-  /* hunting down a bug... */
-  minrow = DIVUP(c->top_b * c->rightedge + c->top_d, c->top_a);
-  if (minrow >= 0) return;
-#endif  
   if (c->leftedge < 0 || c->rightedge >= screen_width || c->leftedge > c->rightedge)
     {
       debug(("bad left/right in outlinecone! %d %d\n", c->leftedge, c->rightedge));
@@ -3224,32 +3199,6 @@ void doDrawWall(DrawWallStruct *wall, ViewCone *c)
 	 }
 	 else
 	 {
-#if 0
-	    __asm
-	    {
-	       mov   edi, screen_ptr;
-	       cmp   edi, end_screen_ptr;
-	       jle   END_WHILE_SCREEN_PTR_GT_END_SCREEN_PTR;
-	       mov   edx, ytex;
-	       mov   esi, DWORD PTR palette;
-	       xor   ecx, ecx
-WHILE_SCREEN_PTR_GT_END_SCREEN_PTR:
-	       mov   eax, edx;
-	       mov   ebx, square_base_ptr;
-	       shr   eax, 16;
-	       sub   ebx, eax;
-	       mov   cl, BYTE PTR [ebx];
-	       sub   edi, MAXX;
-	       add   edx, yinc;
-	       mov   al, BYTE PTR [esi + ecx];
-	       mov   BYTE PTR [edi + MAXX],al
-	       cmp   edi, end_screen_ptr;
-	       jg    WHILE_SCREEN_PTR_GT_END_SCREEN_PTR;
-	       mov   ytex, edx;
-	       mov   screen_ptr, edi;
-END_WHILE_SCREEN_PTR_GT_END_SCREEN_PTR:
-	    }
-#else
 	    while(screen_ptr > end_screen_ptr)
 	    {
 	       *screen_ptr = 
@@ -3258,13 +3207,21 @@ END_WHILE_SCREEN_PTR_GT_END_SCREEN_PTR:
 	       screen_ptr -= MAXX;
 	       ytex += yinc;
 	    }
-#endif
 	 }
 	 total_steps -= num_steps;
       }
    }
 }
 
+#define FIXED_POINT_PRECISION  8L
+
+#define FIXED_ONE		(1 << FIXED_POINT_PRECISION)
+#define FIXED_ONE_HALF	(1 << (FIXED_POINT_PRECISION-1))
+
+// difference between fixed point precision & FINENESS
+// (fails utterly if fixed precision is larger)
+#define BASE_DIF (LOG_FINENESS-FIXED_POINT_PRECISION)
+#define ROUND_FIXED_TO_INT(x) (((x) + FIXED_ONE_HALF) >> FIXED_POINT_PRECISION)
 
 /********************************************************************************/
 /*  biLerp - bi-linear interpolation
@@ -3273,36 +3230,36 @@ END_WHILE_SCREEN_PTR_GT_END_SCREEN_PTR:
  *    code in Graphics Gems.
  *
  */
-void biLerp(FixedPoint u_1, FixedPoint u_2, FixedPoint v_1, FixedPoint v_2, 
+void biLerp(long u_1, long u_2, long v_1, long v_2, 
 	    long count, long bitmap_width, BYTE *bits, BYTE *screen_ptr, BYTE *palette)
 {
-   FixedPoint u;
-   FixedPoint v;  // intermediate texture coordinates
-   FixedPoint du;
-   FixedPoint dv;
-   FixedPoint au;
-   FixedPoint av;
-   FixedPoint ax; // discriminator variables for Bresenhams
-   FixedPoint su;
-   FixedPoint sv; // step values for Bresenhams
-   FixedPoint tmp; // temporary variable for assignments
-   FixedPoint mask; // for masking u & v to bitmap dimensions
-   FixedPoint uround;
-   FixedPoint vround; // rounded values of u & v for initializing the descriminators
+   long u;
+   long v;  // intermediate texture coordinates
+   long du;
+   long dv;
+   long au;
+   long av;
+   long ax; // discriminator variables for Bresenhams
+   long su;
+   long sv; // step values for Bresenhams
+   long tmp; // temporary variable for assignments
+   long mask; // for masking u & v to bitmap dimensions
+   long uround;
+   long vround; // rounded values of u & v for initializing the descriminators
 
    mask = bitmap_width-1; // fails utterly if width is not power of 2
 
    // set up discriminators
-   ax = INT_TO_FIXED(count); 
+   ax = count; 
    tmp = u_2 - u_1; 
-   au = ABS(tmp);
+   au = abs(tmp);
    if (tmp < 0)
       su = -FIXED_ONE;
    else
       su = FIXED_ONE;
 
    tmp = v_2-v_1; 
-   av = ABS(tmp); 
+   av = abs(tmp); 
    if (tmp < 0)
       sv = -FIXED_ONE;
    else
@@ -3337,8 +3294,8 @@ void biLerp(FixedPoint u_1, FixedPoint u_2, FixedPoint v_1, FixedPoint v_2,
 
    if ((ax > au) && (ax > av))  /* x dominant for both u & v */
    {
-      du = au - fpMul(FIXED_ONE_HALF + ((su >= 0) ? uround - u: u-uround),ax);
-      dv = av - fpMul(FIXED_ONE_HALF + ((sv >= 0) ? vround - v: v-vround),ax);
+      du = au - (FIXED_ONE_HALF + ((su >= 0) ? uround - u: u-uround)) * ax;
+      dv = av - (FIXED_ONE_HALF + ((sv >= 0) ? vround - v: v-vround)) * ax;
       do
       {
 	 int vOffset = bitmap_width * (ROUND_FIXED_TO_INT(v) & mask);
@@ -3361,8 +3318,8 @@ void biLerp(FixedPoint u_1, FixedPoint u_2, FixedPoint v_1, FixedPoint v_2,
    }
    else if ((ax > av) && (ax <= au)) /* x dominant over v & u dominant over x */
    {
-      du = fpMul(FIXED_ONE + uround - u,ax) - (au >> 1);
-      dv = av-fpMul(FIXED_ONE_HALF + ((sv >= 0) ? vround - v : v - vround),ax);
+      du = (FIXED_ONE + uround - u) * ax - (au >> 1);
+      dv = av - (FIXED_ONE_HALF + ((sv >= 0) ? vround - v : v - vround)) * ax;
       do
       {
 	 int vOffset = bitmap_width * (ROUND_FIXED_TO_INT(v) & mask);
@@ -3385,8 +3342,8 @@ void biLerp(FixedPoint u_1, FixedPoint u_2, FixedPoint v_1, FixedPoint v_2,
    }
    else if ((ax <= av) && (ax > au)) /* x dominant over u & v dominant over x */
    {
-      du = au-fpMul(FIXED_ONE_HALF + ((su >= 0) ? uround - u : u - uround),ax);
-      dv = fpMul(FIXED_ONE + vround - v,ax) - (av >> 1);
+      du = au - (FIXED_ONE_HALF + ((su >= 0) ? uround - u : u - uround)) * ax;
+      dv = (FIXED_ONE + vround - v) * ax - (av >> 1);
       do
       {
 	 int vOffset = bitmap_width * (ROUND_FIXED_TO_INT(v) & mask);
@@ -3411,8 +3368,8 @@ void biLerp(FixedPoint u_1, FixedPoint u_2, FixedPoint v_1, FixedPoint v_2,
    }
    else if ((ax <= au) && (ax <= av)) /* u & v both dominant */
    {
-      du = fpMul(FIXED_ONE + uround - u,ax) - (au >> 1);
-      dv = fpMul(FIXED_ONE + vround - v,ax) - (av >> 1);
+      du = (FIXED_ONE + uround - u) * ax - (au >> 1);
+      dv = (FIXED_ONE + vround - v) * ax - (av >> 1);
       do
       {
 	 int vOffset = bitmap_width * (ROUND_FIXED_TO_INT(v) & mask);
@@ -3468,21 +3425,21 @@ static void doDrawSloped(ViewCone *c, BSPleaf *leaf, BYTE floor) {
     long    bitmap_width;           // size of texture bitmap
     BYTE    *bits;                  // pointer to actual texture pixels
     BYTE    *palette;               // pallete to use for bitmap based on lighting
-    FixedPoint sx,sy;               // coordinates of current pixel in screen coords (origin at center of view)
+    long sx,sy;               // coordinates of current pixel in screen coords (origin at center of view)
     SlopeData  *slope;              // slope parameters of the surface
     long       shade;               // shading value for directional lighting
-    FixedPoint ox, oy, oz;          // magic vectors for texture mapping: relate x, y, & z to screen coords (see docs)
-    FixedPoint hx, hy, hz;          // x = ox + sx*hx + sy*vx , y = oy + sx*hy + sy*vy
-    FixedPoint vx, vy, vz;          // z = oz + sx*hz + sy*vz
-    FixedPoint x, y, z;             // intermediate values in texture mapping u = x/z & v = y/z
-    FixedPoint u, v;                // texture coordinates
-    FixedPoint tu,tv;               // texture offsets from sector struct
+    long ox, oy, oz;          // magic vectors for texture mapping: relate x, y, & z to screen coords (see docs)
+    long hx, hy, hz;          // x = ox + sx*hx + sy*vx , y = oy + sx*hy + sy*vy
+    long vx, vy, vz;          // z = oz + sx*hz + sy*vz
+    long x, y, z;             // intermediate values in texture mapping u = x/z & v = y/z
+    long u, v;                // texture coordinates
+    long tu,tv;               // texture offsets from sector struct
     long       iu, iv;              // integer versions of texture coordinates used to indicies into texture pixels
     long       len, count;          // used to count length of sub-affine step
-    FixedPoint u_1, u_2, du;        // u of each endpoint of sub-affine step and per pixel change
-    FixedPoint v_1, v_2, dv;        // v of each endpoint of sub-affine step and per pixel change
-    FixedPoint z0, z_du, z_dv;      // express lighting distance from user in terms of u & v: z = z0 + u*z_du + v*z_dv
-    FixedPoint light1,light2;       // lighting distance at each endpoint of sub-affine step
+    long u_1, u_2, du;        // u of each endpoint of sub-affine step and per pixel change
+    long v_1, v_2, dv;        // v of each endpoint of sub-affine step and per pixel change
+    long z0, z_du, z_dv;      // express lighting distance from user in terms of u & v: z = z0 + u*z_du + v*z_dv
+    long light1,light2;       // lighting distance at each endpoint of sub-affine step
     
     // get appropriate slope record and texture
     if (floor != 0) {
@@ -3603,7 +3560,7 @@ static void doDrawSloped(ViewCone *c, BSPleaf *leaf, BYTE floor) {
 	sy = horizon - row;
 
 	// calculate x, y, & z for start of row
-	x = ox + hx*sx + vx*sy;  // Don't need to use fpMul for
+	x = ox + hx*sx + vx*sy;
 	y = oy + hy*sx + vy*sy;  //  int * fixed multiply
 	z = oz + hz*sx + vz*sy;
 
@@ -3612,11 +3569,11 @@ static void doDrawSloped(ViewCone *c, BSPleaf *leaf, BYTE floor) {
 	    return;
 	}
 
-	u_2 = fpDiv(y, z); // get initial texture coordinates
-	v_2 = fpDiv(x, z);
+	u_2 = (y / z); // get initial texture coordinates
+	v_2 = (x / z);
 
 	// get initial lighting distance
-	light2 = z0 + fpMul(u_2, z_du) - fpMul(v_2, z_dv);
+	light2 = z0 + (u_2 * z_du) - (v_2 * z_dv);
 
 	// pointer to first pixel in row
 	screen_ptr = gBits + row * MAXX + mincol;
@@ -3641,11 +3598,11 @@ static void doDrawSloped(ViewCone *c, BSPleaf *leaf, BYTE floor) {
 	    z += hz * count;
 
 	    // get u & v of next endpoint
-	    u_2 = fpDiv(y, z);
-	    v_2 = fpDiv(x, z);
+	    u_2 = (y / z);
+	    v_2 = (x / z);
 
 	    // get lighting distance of next endpoint
-	    light2 = z0 + fpMul(u_2, z_du) - fpMul(v_2, z_dv);
+	    light2 = z0 + (u_2 * z_du) - (v_2 * z_dv);
 
 	    // use average of enpoints for light lookup
 	    light1 = (light1+light2)<<(BASE_DIF-1);
@@ -3663,7 +3620,7 @@ static void doDrawSloped(ViewCone *c, BSPleaf *leaf, BYTE floor) {
 	    // MAX_DDA controls when biLerp is used and should be on the order of
 	    //  magnitude of the bitmap size
 
-	    if ((ABS(u_2 - u_1) < MAX_DDA) && (ABS(v_2 - v_1) < MAX_DDA)) {
+	    if ((abs(u_2 - u_1) < MAX_DDA) && (abs(v_2 - v_1) < MAX_DDA)) {
 		biLerp(u_1*bitmap_width + tu, u_2*bitmap_width + tu, v_1*bitmap_width + tv, v_2*bitmap_width + tv, count, bitmap_width, bits, screen_ptr, palette);
 
 		screen_ptr += count;
@@ -3713,9 +3670,9 @@ static void doDrawLeaf(BSPleaf *leaf, ViewCone *c, PDIB texture, int height, cha
 
    long shade;
    
-   register int tx, ty, tx_inc, ty_inc;
-   register BYTE *palette, *bits;
-   register BYTE *screen_ptr, *end_screen_ptr;
+   int tx, ty, tx_inc, ty_inc;
+   BYTE *palette, *bits;
+   BYTE *screen_ptr, *end_screen_ptr;
    Sector *sector;
    
 #if DRAW_LEAF_CONES
@@ -3729,13 +3686,6 @@ static void doDrawLeaf(BSPleaf *leaf, ViewCone *c, PDIB texture, int height, cha
    
    tex_width  = DibWidth(texture);
    tex_height = DibHeight(texture);
-#if 0
-   if ((tex_width != BITMAP_WIDTH || tex_height != BITMAP_WIDTH) &&
-       (tex_width != BITMAP_WIDTH * 2 || tex_height != BITMAP_WIDTH * 2))
-   {
-      debug(("warning: bad leaf bitmap size %d x %d\n", tex_width, tex_height));
-   }
-#endif
    
    new_hv = (viewer_height - height) * VIEWER_DISTANCE;
    
@@ -4078,22 +4028,6 @@ static void doDrawBackground(ViewCone *c)
       over_width = DibWidth(pdib_ov);
       over_height = DibHeight(pdib_ov);
      
-#if 0
-      /* arbitrary definition: offsets of a background overlay are:
-       * x: angle from due east
-       * y: pixels up from horizon
-       * negative y gives an object location below the horizon.
-       * The given bitmap is centered at the offset location.
-       */
-      px = overlay->x;
-      py = overlay->y;
-      /* convert from arbitrary definition to real screen coordinates */
-      //px = px/2 + screen_width/2 - viewer_angle/2;
-      while (px >= 0)
-         px -= NUMDEGREES/2;
-      while (px < 0)
-	 px += NUMDEGREES/2;
-#else
       deltaAngle = overlay->x - viewer_angle;
       if (deltaAngle > (NUMDEGREES/2))
 	 deltaAngle -= NUMDEGREES;
@@ -4102,7 +4036,6 @@ static void doDrawBackground(ViewCone *c)
       px = (world_width * deltaAngle / NUMDEGREES);
       px += screen_width2;
       py = horizon - overlay->y;
-#endif
       
       /* adjust for center of bitmap */
       px -= over_width/2;
@@ -4286,17 +4219,17 @@ static void SetMappingValues(SlopeData *slope ) {
     // h, v, & o vectors express relation between texture coordinates 
     // and pixel coordinates
     
-    slope->h.x = fpMul(v0.y, m.z) - fpMul(v0.z, m.y);
-    slope->h.y = fpMul(v0.y, n.z) - fpMul(v0.z, n.y);
-    slope->h.z = fpMul(n.y, m.z) - fpMul(n.z, m.y);
+    slope->h.x = (v0.y * m.z) - (v0.z * m.y);
+    slope->h.y = (v0.y * n.z) - (v0.z * n.y);
+    slope->h.z = (n.y * m.z) - (n.z * m.y);
 
-    slope->v.x = fpMul(v0.z, m.x) - fpMul(v0.x, m.z);
-    slope->v.y = fpMul(v0.z, n.x) - fpMul(v0.x, n.z);
-    slope->v.z = fpMul(n.z, m.x) - fpMul(n.x, m.z);
+    slope->v.x = (v0.z * m.x) - (v0.x * m.z);
+    slope->v.y = (v0.z * n.x) - (v0.x * n.z);
+    slope->v.z = (n.z * m.x) - (n.x * m.z);
 
-    slope->o.x = fpMul(v0.x, m.y) - fpMul(v0.y, m.x);
-    slope->o.y = fpMul(v0.x, n.y) - fpMul(v0.y, n.x);
-    slope->o.z = fpMul(n.x, m.y) - fpMul(n.y, m.x);
+    slope->o.x = (v0.x * m.y) - (v0.y * m.x);
+    slope->o.y = (v0.x * n.y) - (v0.y * n.x);
+    slope->o.z = (n.x * m.y) - (n.y * m.x);
     
     // save these for calculating distance from viewer
     // in terms of u & v
@@ -4339,8 +4272,8 @@ void DrawBSP(room_type *room, Draw3DParams *params, long width, Bool draw)
   
    /* find equations that bound viewing frustum */
    /* keep 10 = FIX_DECIMAL-6 bits of accuracy */
-   center_a = COS(viewer_angle) >> 6;
-   center_b = SIN(viewer_angle) >> 6;
+   center_a = (long)cos(viewer_angle) >> 6;
+   center_b = (long)sin(viewer_angle) >> 6;
 
    left_a = -center_b + ((center_a * screen_width2) >> LOG_VIEWER_DISTANCE);
    left_b =  center_a + ((center_b * screen_width2) >> LOG_VIEWER_DISTANCE);
@@ -4407,7 +4340,7 @@ void DrawBSP(room_type *room, Draw3DParams *params, long width, Bool draw)
 }
 
 /**********************************************************************/
-void BSPInitialize(void)
+void BSPInitialize()
 {
 }
 /**********************************************************************/

@@ -5,13 +5,13 @@
 // the LICENSE file that accompanies it.
 //
 // Meridian is a registered trademark.
-/* 
-* dialog.c: Game dialog box procedures
-*/
+/*
+ * dialog.c: Game dialog box procedures
+ */
 
 #include "client.h"
 
-#define PAGE_BREAK_CHAR '¶'	  /* For multi-page descriptions */
+#define PAGE_BREAK_CHAR L'¶'	  /* For multi-page descriptions */
 #define MAX_PAGE_DESCRIPTION_TEXT MAXMESSAGE
 
 static HWND hDescDialog = NULL;   /* Non-null if Description dialog is up */
@@ -141,7 +141,7 @@ static void ResizeEditToFitText(HWND hEdit, HFONT hFont)
 	RECT edit_rect, dlg_rect;
 	int num_lines, yincrease;
 	
-	if (!(GetWindowLong(hEdit, GWL_STYLE) & WS_VISIBLE))
+	if (!(GetWindowLongPtr(hEdit, GWL_STYLE) & WS_VISIBLE))
 		return;
 	
 	GetWindowRect(hEdit, &edit_rect);
@@ -209,14 +209,14 @@ BOOL CALLBACK DescDialogProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)
 	char descriptionBuffer[MAX_PAGE_DESCRIPTION_TEXT+1];
 	int height;
 	
-	info = (DescDialogStruct *) GetWindowLong(hDlg, DWL_USER);
+	info = (DescDialogStruct *) GetWindowLongPtr(hDlg, DWLP_USER);
 	
 	switch (message)
 	{
 	case WM_INITDIALOG:
 		info = (DescDialogStruct *) lParam;
 		/* Store structure in dialog box's extra bytes */
-		SetWindowLong(hDlg, DWL_USER, (long) info);
+		SetWindowLongPtr(hDlg, DWLP_USER, (long) info);
 		
 		hwndBitmap = GetDlgItem(hDlg, IDC_DESCBITMAP);
 		hFixed = GetDlgItem(hDlg, IDC_DESCFIXED);
@@ -277,7 +277,7 @@ BOOL CALLBACK DescDialogProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)
 		
 		// Resize and move dialog controls
 		GetWindowRect(hDlg, &dlg_rect);
-		if (GetWindowLong(hEdit, GWL_STYLE) & WS_VISIBLE)
+		if (GetWindowLongPtr(hEdit, GWL_STYLE) & WS_VISIBLE)
 		{
 			ShowWindow(hEdit, SW_HIDE);
 			ResizeEditToFitText(hFixed, hFont);
@@ -289,7 +289,7 @@ BOOL CALLBACK DescDialogProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)
 			ResizeEditToFitText(hFixed, hFont);
 			ResizeDialog(hDlg, &dlg_rect, desc_controls);
 		}
-		if (GetWindowLong(hEdit, GWL_STYLE) & WS_VISIBLE)
+		if (GetWindowLongPtr(hEdit, GWL_STYLE) & WS_VISIBLE)
 		{
 			GetWindowRect(hFixed, &fixed_rect);
 			GetWindowRect(hEdit, &edit_rect);
@@ -538,7 +538,7 @@ void AnimateDescription(int dt)
 	if (hDescDialog == NULL)
 		return;
 	
-	info = (DescDialogStruct *) GetWindowLong(hDescDialog, DWL_USER);
+	info = (DescDialogStruct *) GetWindowLongPtr(hDescDialog, DWLP_USER);
 	obj = info->obj;
 	
 	old_group = obj->animate->group;
@@ -682,7 +682,7 @@ void DisplayDescription(object_node *obj, BYTE flags, char *description,
 	template_id = (obj->flags & OF_PLAYER) ? IDD_DESCPLAYER : IDD_DESC;
 	
 	DialogBoxParam(hInst, MAKEINTRESOURCE(template_id), hDescParent,
-                 DescDialogProc, (LPARAM) &info);
+                 (DLGPROC)DescDialogProc, (LPARAM) &info);
 	
 	TooltipReset();
 	SetDescParams(NULL, DESC_NONE);

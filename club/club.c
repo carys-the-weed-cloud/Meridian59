@@ -173,7 +173,7 @@ void Interface(int how_show)
    MSG msg;
 
    main_class.style = CS_HREDRAW | CS_VREDRAW;
-   main_class.lpfnWndProc = InterfaceWindowProc;
+   main_class.lpfnWndProc = (WNDPROC)InterfaceWindowProc;
    main_class.cbClsExtra = 0;
    main_class.cbWndExtra = DLGWINDOWEXTRA;
    main_class.hInstance = hInst;
@@ -309,7 +309,7 @@ void Error(char *fmt, ...)
    vsprintf(s,fmt,marker);
    va_end(marker);
 
-   retval = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_ERROR), hwndMain, ErrorDialogProc, 
+   retval = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_ERROR), hwndMain, (DLGPROC)ErrorDialogProc,
 			   (LPARAM) s);
 
    if (retval == IDOK)

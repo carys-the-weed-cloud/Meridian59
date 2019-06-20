@@ -87,14 +87,14 @@ void DownloadFiles(DownloadInfo *params)
    advert = (IDD_DOWNLOADAD == dialog);
    if (!advert  && !config.avoidDownloadAskDialog)
    {
-      retval = DialogBox(hInst, MAKEINTRESOURCE(IDD_ASKDOWNLOAD), NULL, AskDownloadDialogProc);
+      retval = DialogBox(hInst, MAKEINTRESOURCE(IDD_ASKDOWNLOAD), NULL, (DLGPROC)AskDownloadDialogProc);
       switch (retval) {
       case 3: // do the demo button
          WebLaunchBrowser(info->demoPath);
          SendMessage(hMain,WM_SYSCOMMAND,SC_CLOSE,0);
          return;
       case IDOK: // proceed with download
-         retval = DialogBox(hInst, MAKEINTRESOURCE(dialog), NULL, DownloadDialogProc);
+         retval = DialogBox(hInst, MAKEINTRESOURCE(dialog), NULL, (DLGPROC)DownloadDialogProc);
          advert = FALSE;
          if (retval == IDOK)
          {
@@ -703,7 +703,7 @@ void DownloadInit(void)
    TransferInit();
 
    // Start ping timer
-   timer_id = SetTimer(NULL, 0, PING_DELAY, DownloadPingProc);
+   timer_id = SetTimer(NULL, 0, PING_DELAY, (TIMERPROC)DownloadPingProc);
 }
 /*****************************************************************************/
 /*

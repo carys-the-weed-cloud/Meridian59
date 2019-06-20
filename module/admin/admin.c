@@ -131,7 +131,7 @@ Bool WINAPI EventUserAction(int action, void *action_data)
    {
    case A_ADMIN:
       if (hAdminDlg == NULL)
-	 CreateDialog(hInst, MAKEINTRESOURCE(IDD_ADMIN), c->hMain, AdminDialogProc);
+	 CreateDialog(hInst, MAKEINTRESOURCE(IDD_ADMIN), c->hMain, (DLGPROC)AdminDialogProc);
       else 
       {
 	 ShowWindow(hAdminDlg, SW_SHOWNORMAL);

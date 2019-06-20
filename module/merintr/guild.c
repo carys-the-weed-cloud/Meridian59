@@ -27,11 +27,11 @@ typedef struct {
 
 // Property sheet info, one per tab
 TabPage tab_pages[] = {
-   { IDS_GUILDMEMBERS, IDD_GUILDMEMBERS,       GuildMemberDialogProc, },
-   { IDS_GUILDALLIES,  IDD_GUILDALLIES,        GuildAllyDialogProc, },
-   { IDS_INVITE,       IDD_GUILDINVITE,        GuildInviteDialogProc, },
-   { IDS_GUILDMASTER,  IDD_GUILDMASTER,        GuildMasterDialogProc, },
-   { IDS_GUILDSHIELD,	IDD_GUILDSHIELD,		GuildShieldDialogProc, },
+	{ IDS_GUILDMEMBERS,	IDD_GUILDMEMBERS,		(DLGPROC)GuildMemberDialogProc,	},
+	{ IDS_GUILDALLIES,	IDD_GUILDALLIES,		(DLGPROC)GuildAllyDialogProc,	},
+	{ IDS_INVITE,		IDD_GUILDINVITE,		(DLGPROC)GuildInviteDialogProc,	},
+	{ IDS_GUILDMASTER,	IDD_GUILDMASTER,		(DLGPROC)GuildMasterDialogProc, },
+	{ IDS_GUILDSHIELD,	IDD_GUILDSHIELD,		(DLGPROC)GuildShieldDialogProc, },
 };
 
 #define NUM_TAB_PAGES (sizeof(tab_pages) / sizeof(TabPage))

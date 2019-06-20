@@ -33,7 +33,7 @@ static void QuotePlayerName(char *name, char *buf);
  */
 void GroupConfigure(void)
 {
-   DialogBox(hInst, MAKEINTRESOURCE(IDD_GROUP), cinfo->hMain, GroupDialogProc);
+   DialogBox(hInst, MAKEINTRESOURCE(IDD_GROUP), cinfo->hMain, (DLGPROC)GroupDialogProc);
 }
 /*****************************************************************************/
 /*

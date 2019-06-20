@@ -90,7 +90,7 @@ void ChooseCharacter(Character *characters, WORD num_characters, char *motd,
    s.num_ads        = num_ads;
    s.ads            = ads;
 
-   retval = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_CHARPICK), cinfo->hMain,PickCharDialogProc, (LPARAM) &s);
+   retval = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_CHARPICK), cinfo->hMain, (DLGPROC)PickCharDialogProc, (LPARAM) &s);
 
    CharactersDestroy(characters, num_characters);
 

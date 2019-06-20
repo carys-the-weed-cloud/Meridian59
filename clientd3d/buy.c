@@ -152,9 +152,9 @@ BOOL BuyInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
    info->hwndCost = GetDlgItem(hDlg, IDC_COST);
 
    // Draw objects in owner-drawn list box
-   SetWindowLong(info->hwndItemList, GWL_USERDATA, OD_DRAWOBJ);
-   SetWindowLong(info->hwndCostList, GWL_USERDATA, OD_DRAWOBJ);
-   SetWindowLong(info->hwndQuanList, GWL_USERDATA, OD_DRAWOBJ);
+   SetWindowLongPtr(info->hwndItemList, GWLP_USERDATA, OD_DRAWOBJ);
+   SetWindowLongPtr(info->hwndCostList, GWLP_USERDATA, OD_DRAWOBJ);
+   SetWindowLongPtr(info->hwndQuanList, GWLP_USERDATA, OD_DRAWOBJ);
 
    /* Add items & costs to list boxes */
    WindowBeginUpdate(info->hwndItemList);
@@ -478,7 +478,7 @@ void BuyList(object_node seller, list_type items)
 
    if (hwndBuyDialog == NULL)
       /* Give user list of things to select from */
-      DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_BUY), hMain, BuyDialogProc, (LPARAM) &dlg_info);
+      DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_BUY), hMain, (DLGPROC)BuyDialogProc, (LPARAM) &dlg_info);
 
    ObjectListDestroy(items);
 }
@@ -500,7 +500,7 @@ void WithdrawalList(object_node seller, list_type items)
 
    if (hwndBuyDialog == NULL)
       /* Give user list of things to select from */
-      DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_WITHDRAWAL), hMain, WithdrawalDialogProc, (LPARAM) &dlg_info);
+      DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_WITHDRAWAL), hMain, (DLGPROC)WithdrawalDialogProc, (LPARAM) &dlg_info);
 
    ObjectListDestroy(items);
 }

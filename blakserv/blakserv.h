@@ -117,6 +117,10 @@ enum
 #define PACKAGE_FILE "packages.txt"
 #define SPROCKET_FILE "sprocket.dll"
 
+#ifndef UNICODE
+#define UNICODE
+#endif
+
 #include <string>
 #include <vector>
 typedef std::vector<std::string> StringVector;
@@ -130,16 +134,16 @@ typedef std::vector<std::string> StringVector;
 #endif  // BLAK_PLATFORM_LINUX
 
 #include <algorithm>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <cstdarg>
 #include <malloc.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <time.h>
-#include <math.h>
+#include <ctime>
+#include <cmath>
 
 #include "btime.h"
 

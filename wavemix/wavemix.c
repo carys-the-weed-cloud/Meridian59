@@ -11,6 +11,7 @@
 **    8/13/95: Removed tons of superfluous garbage.  Removed requirement that DLL is
 **             in system directory and INI file in Windows directory.  ARK
 */ 
+//TODO: Replace wavemix with XAudio2
 
 #include <windows.h>
 #include <mmsystem.h>

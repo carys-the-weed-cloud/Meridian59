@@ -598,7 +598,7 @@ void Offered(list_type items)
 
    /* Bring up offer dialog */
    CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_OFFERSEND), 
-		     NULL, SendOfferDialogProc, (LPARAM) &info);
+		     NULL, (DLGPROC)SendOfferDialogProc, (LPARAM) &info);
 }
 /************************************************************************/
 /*

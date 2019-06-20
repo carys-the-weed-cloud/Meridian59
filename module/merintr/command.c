@@ -484,7 +484,7 @@ BOOL CALLBACK SuicideVerifyDialogProc(HWND hDlg, UINT message, UINT wParam, LONG
 void CommandSuicide(char *args)
 {
    if (IDOK == DialogBox(hInst, MAKEINTRESOURCE(IDD_SUICIDE),
-                         cinfo->hMain, SuicideVerifyDialogProc))
+                         cinfo->hMain, (DLGPROC)SuicideVerifyDialogProc))
    {
       RequestSuicide();
    }

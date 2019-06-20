@@ -206,7 +206,7 @@ BOOL CALLBACK PreferencesDialogProc(HWND hDlg, UINT message, UINT wParam, LONG l
          return TRUE;
          
       case IDC_PROFANESETTINGS:
-         if (IDOK == DialogBox(hInst, MAKEINTRESOURCE(IDC_PROFANESETTINGS), hDlg, ProfanityDialogProc))
+         if (IDOK == DialogBox(hInst, MAKEINTRESOURCE(IDC_PROFANESETTINGS), hDlg, (DLGPROC)ProfanityDialogProc))
             CheckDlgButton(hDlg, IDC_PROFANE, TRUE);
          return TRUE;
          

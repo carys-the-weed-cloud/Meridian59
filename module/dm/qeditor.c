@@ -30,7 +30,7 @@ void ShowQEditorDlg()
    if (!hQEditorDlg)
    {
       hQEditorDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_QEDITOR),
-                                  cinfo->hMain, QEditorDialogProc);
+                                  cinfo->hMain, (DLGPROC)QEditorDialogProc);
    }
 
    if (hQEditorDlg)

@@ -236,7 +236,7 @@ void IntroInit(void)
    light_level = 0;
 
    // Display logo for a certain amount of time
-   timer_id = SetTimer(NULL, 0, LOGO_FADE_DELAY, LightTimerProc);
+   timer_id = SetTimer(NULL, 0, LOGO_FADE_DELAY, (TIMERPROC)LightTimerProc);
 }
 /************************************************************************/
 /*
@@ -256,7 +256,7 @@ void CALLBACK LightTimerProc(HWND hwnd, UINT msg, UINT timer, DWORD dwTime)
   {
     KillTimer(NULL, timer_id);
     // Show logo for a few seconds
-    timer_id = SetTimer(NULL, 0, LOGO_DELAY, LightTimerProc);
+    timer_id = SetTimer(NULL, 0, LOGO_DELAY, (TIMERPROC)LightTimerProc);
   }
   else IntroDrawLogo();
 }
@@ -367,7 +367,7 @@ void IntroShowSplash(void)
 
    SetFocus(hwndDialButton);
 
-   timer_id = SetTimer(NULL, 0, MUSIC_DELAY, PlayMusicProc);
+   timer_id = SetTimer(NULL, 0, MUSIC_DELAY, (TIMERPROC)PlayMusicProc);
 }
 /************************************************************************/
 void CALLBACK PlayMusicProc(HWND hwnd, UINT msg, UINT timer, DWORD dwTime)

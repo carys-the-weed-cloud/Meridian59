@@ -254,7 +254,7 @@ void UserSelectColors(WORD fg, WORD bg)
 	info.bg = bg;
 
 	DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_COLOR), hMain,
-		ColorDialogProc, (LPARAM) &info);
+		(DLGPROC)ColorDialogProc, (LPARAM) &info);
 }
 /************************************************************************/
 /*

@@ -280,7 +280,7 @@ void AdminDlgCommand(HWND hDlg, int cmd_id, HWND hwndCtl, UINT codeNotify)
 
       index = ListBox_GetCurSel(hwndCtl);
       if (index != LB_ERR)
-	 DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_ADMINVALUE), hDlg, AdminValueDialogProc, index);
+	 DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_ADMINVALUE), hDlg, (DLGPROC)AdminValueDialogProc, index);
       break;
 
    case IDC_OWNERBUTTON:
@@ -305,7 +305,7 @@ void AdminDlgCommand(HWND hDlg, int cmd_id, HWND hwndCtl, UINT codeNotify)
       if (owner == OWNER_NONE || current_obj == OBJECT_NONE)
 	 break;
       
-      DialogBox(hInst, MAKEINTRESOURCE(IDD_ADMINMOVE), hDlg, AdminMoveDialogProc);
+      DialogBox(hInst, MAKEINTRESOURCE(IDD_ADMINMOVE), hDlg, (DLGPROC)AdminMoveDialogProc);
       break;
 
    case IDC_SHOWOBJ:
@@ -561,7 +561,7 @@ Bool AdminGetString(HWND hParent, char *buf)
 {
    int retval;
    retval = DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_ADMINSTRING), hParent, 
-			   AdminStringDialogProc, (LPARAM) buf);
+			   (DLGPROC)AdminStringDialogProc, (LPARAM) buf);
    
    if (retval == IDCANCEL)
       return False;

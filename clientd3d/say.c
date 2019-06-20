@@ -70,7 +70,7 @@ void RemoveCurrentUser(ID user_id)
 /*
 * FreeCurrentUsers:  Free list of current users
 */
-void FreeCurrentUsers(void)
+void FreeCurrentUsers()
 {
 	ObjectListDestroy(current_users);
 	current_users = NULL;
@@ -80,10 +80,10 @@ void FreeCurrentUsers(void)
 /*
 * UserWho:  Display a list of currently logged on users.
 */
-void UserWho(void)
+void UserWho()
 {
 	DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_WHO), hMain,
-		WhoDialogProc, (LPARAM) current_users);
+		(DLGPROC)WhoDialogProc, (LPARAM) current_users);
 }
 
 /************************************************************************/

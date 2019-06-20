@@ -36,7 +36,7 @@ void UserReadMail(void)
    if (hReadMailDlg == NULL)
    {
       // Don't ask for new mail; might need to wait for user list
-      if (CreateDialog(hInst, MAKEINTRESOURCE(IDD_MAILREAD), NULL, ReadMailDialogProc) == NULL)
+      if (CreateDialog(hInst, MAKEINTRESOURCE(IDD_MAILREAD), NULL, (DLGPROC)ReadMailDialogProc) == NULL)
 	 debug(("CreateDialog failed for read mail dialog\n"));
    }
    else

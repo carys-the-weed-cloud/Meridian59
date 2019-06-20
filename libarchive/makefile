@@ -62,6 +62,7 @@ OBJS = \
 	$(OUTDIR)\archive_read_support_filter_rpm.obj \
 	$(OUTDIR)\archive_read_support_filter_uu.obj \
 	$(OUTDIR)\archive_read_support_filter_xz.obj \
+	$(OUTDIR)\archive_read_support_filter_zstd.obj \
 	$(OUTDIR)\archive_read_support_format_7zip.obj \
 	$(OUTDIR)\archive_read_support_format_all.obj \
 	$(OUTDIR)\archive_read_support_format_ar.obj \
@@ -99,6 +100,7 @@ OBJS = \
 	$(OUTDIR)\archive_write_add_filter_program.obj \
 	$(OUTDIR)\archive_write_add_filter_uuencode.obj \
 	$(OUTDIR)\archive_write_add_filter_xz.obj \
+	$(OUTDIR)\archive_write_add_filter_zstd.obj \
 	$(OUTDIR)\archive_write_disk_posix.obj \
 	$(OUTDIR)\archive_write_disk_set_standard_lookup.obj \
 	$(OUTDIR)\archive_write_disk_windows.obj \

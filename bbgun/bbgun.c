@@ -291,7 +291,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
           return 0;
 
       case IDM_OTHER:
-	 if (DialogBox(hInst, MAKEINTRESOURCE(IDD_SETTINGS), hWnd, SettingsDialogProc) == IDOK)
+	 if (DialogBox(hInst, MAKEINTRESOURCE(IDD_SETTINGS), hWnd, (DLGPROC)SettingsDialogProc) == IDOK)
 	    ResetBBGList();
 	 return 0;
 

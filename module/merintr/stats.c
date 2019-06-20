@@ -36,7 +36,7 @@ static void StatRedraw(Statistic *s);
  */
 void StatsCreate(HWND hParent)
 {
-  CreateDialog(hInst, MAKEINTRESOURCE(IDD_STATS), hParent, StatsWindowProc);
+  CreateDialog(hInst, MAKEINTRESOURCE(IDD_STATS), hParent, (DLGPROC)StatsWindowProc);
   
   current_group = STATS_INVENTORY;   // Group to start displaying
   group_type = GROUP_NONE;

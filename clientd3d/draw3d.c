@@ -81,12 +81,6 @@ BYTE light_rows[MAXY/2+1];      // Strength of light as function of screen row
 
 PDIB background;                      /* Pointer to background bitmap */
 
-#define FASTASM
-
-#ifdef FASTASM
-extern void StretchAsm1To2(BYTE *src,BYTE *dest,int width,int height);
-#endif
-
 static void StretchC1To2(BYTE *src,BYTE *dest,int width,int height);
 
 /* local function prototypes */
@@ -539,8 +533,8 @@ void DrawMap( room_type *room, Draw3DParams *params, Bool bMiniMap )
  */
 void SetLightingInfo(int sun_x, int sun_y, BYTE intensity) 
 {
-   sun_vect.x = COS(sun_x) >> (FIX_DECIMAL - LOG_FINENESS);
-   sun_vect.y = SIN(sun_x) >> (FIX_DECIMAL - LOG_FINENESS);
+   sun_vect.x = (long)cos(sun_x) >> (FIX_DECIMAL - LOG_FINENESS);
+   sun_vect.y = (long)sin(sun_x) >> (FIX_DECIMAL - LOG_FINENESS);
    sun_vect.z = 0;  // Hey Andrew - You need to fix this!
    
 	shade_amount = intensity * FINENESS / 64;
@@ -584,11 +578,7 @@ void StretchImage(void)
       break;
       
    case 2:
-#ifdef FASTASM
-      StretchAsm1To2(gBits,gBufferBits,area.cx,area.cy);
-#else   
       StretchC1To2(gBits,gBufferBits,area.cx,area.cy);
-#endif
       break;
       
    default:
@@ -599,8 +589,8 @@ void StretchImage(void)
 /************************************************************************/
 void StretchC1To2(BYTE *src,BYTE *dest,int width,int height)
 {
-  register long i,j;
-  register BYTE *s,*d,*d2;
+  long i,j;
+  BYTE *s,*d,*d2;
   
   /* 1->2 stretch */
   for(i = 0;i < height;i++)
@@ -610,7 +600,7 @@ void StretchC1To2(BYTE *src,BYTE *dest,int width,int height)
     d2 = d + MAXX * 2;                // One row offset from dest
     for(j = 0; j < width; j++)
     {
-      register BYTE b = *s;
+      BYTE b = *s;
       *d++ = b;
       *d++ = b;
       *d2++ = b;
@@ -676,8 +666,8 @@ int DiscreteLog(int x)
  */
 void FindOffsets(int d, long theta, int *dx, int *dy)
 {
-   *dx = (int) FixToLong(FixMul(LongToFix(d), COS(theta)));
-   *dy = (int) FixToLong(FixMul(LongToFix(d), SIN(theta)));
+   *dx = d * cos(theta);
+   *dy = d * sin(theta);
 }
 /************************************************************************/
 /*

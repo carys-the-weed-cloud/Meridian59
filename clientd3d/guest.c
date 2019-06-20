@@ -38,7 +38,7 @@ Bool GuestGetLogin(void)
 
    // Bring up dialog first time through; update bar on later attempts
    if (num_tries == 0)
-      CreateDialog(hInst, MAKEINTRESOURCE(IDD_GUEST), hMain, GuestDialogProc);
+      CreateDialog(hInst, MAKEINTRESOURCE(IDD_GUEST), hMain, (DLGPROC)GuestDialogProc);
    else SendMessage(hGuestDialog, BK_PROGRESS, 0, num_tries + 1);
 
    strcpy(config.username, GetString(hInst, IDS_GUEST));

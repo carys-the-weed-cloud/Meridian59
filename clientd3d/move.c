@@ -465,15 +465,15 @@ void UserMovePlayer(int action)
 
 void SlideAlongWall(WallData *wall, int xOld, int yOld, int *xNew, int *yNew)
 {  // Try to "slide" along in direction of wall
-   double dx = (double)(*xNew - xOld);
-   double dy = (double)(*yNew - yOld);
-   double wall_dx = (double)(wall->x1 - wall->x0);
-   double wall_dy = (double)(wall->y1 - wall->y0);
+   double dx = (*xNew - xOld);
+   double dy = (*yNew - yOld);
+   double wall_dx = (wall->x1 - wall->x0);
+   double wall_dy = (wall->y1 - wall->y0);
    double num = dx * wall_dx + dy * wall_dy;
    double denom = wall_dx * wall_dx + wall_dy * wall_dy;
     
-   *xNew = xOld + FloatToInt(wall_dx * num / denom);
-   *yNew = yOld + FloatToInt(wall_dy * num / denom);
+   *xNew = xOld + (wall_dx * num / denom);
+   *yNew = yOld + (wall_dy * num / denom);
 }
 
 BSPnode *FindIntersection(BSPnode *node, int xOld, int yOld, int xNew, int yNew, int z,WallData **wallIntersect)

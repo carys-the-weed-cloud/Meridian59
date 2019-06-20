@@ -23,6 +23,7 @@
 */
 
 #include "blakserv.h"
+#include <ws2tcpip.h>
 #include <mmsystem.h>
 #include <windowsx.h>
 #include <commctrl.h>
@@ -163,7 +164,7 @@ void __cdecl InterfaceThread(void *unused)
 	HACCEL hAccel;
 	
 	main_class.style = CS_HREDRAW | CS_VREDRAW;
-	main_class.lpfnWndProc = InterfaceWindowProc;
+	main_class.lpfnWndProc = (WNDPROC)InterfaceWindowProc;
 	main_class.cbClsExtra = 0;
 	main_class.cbWndExtra = DLGWINDOWEXTRA;
 	main_class.hInstance = hInst;
@@ -171,13 +172,13 @@ void __cdecl InterfaceThread(void *unused)
 	main_class.hCursor = NULL;
 	main_class.hbrBackground = (HBRUSH) GetStockObject(LTGRAY_BRUSH);
 	main_class.lpszMenuName = NULL;
-	main_class.lpszClassName = "blakserv";
+	main_class.lpszClassName = L"blakserv";
 	
 	RegisterClass(&main_class);
 	
 	InitCommonControls();
 
-   LoadLibrary("riched20.dll");
+   LoadLibrary(L"riched20.dll");
 
 	hwndMain = CreateDialog(hInst,MAKEINTRESOURCE(IDD_MAIN_DLG),0,NULL);
 	
@@ -225,7 +226,7 @@ long WINAPI InterfaceWindowProc(HWND hwnd,UINT message,UINT wParam,LONG lParam)
 		return 0;
 		
 	case WM_CLOSE :
-		if (MessageBox(hwnd,"Are you sure you want to exit?",BlakServNameString(),
+		if (MessageBox(hwnd,L"Are you sure you want to exit?", (LPCWSTR)BlakServNameString(),
 			MB_YESNO | MB_DEFBUTTON2 | MB_ICONQUESTION) == IDYES)
 		{
 			DestroyWindow(hwnd);
@@ -252,19 +253,19 @@ long WINAPI InterfaceWindowProc(HWND hwnd,UINT message,UINT wParam,LONG lParam)
 				switch (lpttt->hdr.idFrom)
 				{ 
 				case IDM_FILE_EXIT : 
-					lpttt->lpszText = "Exit";
+					lpttt->lpszText = L"Exit";
 					break; 
 				case IDM_FILE_SAVE :
-					lpttt->lpszText = "Save Game";
+					lpttt->lpszText = L"Save Game";
 					break; 
 				case IDM_FILE_RELOADSYSTEM :
-					lpttt->lpszText = "Reload System";
+					lpttt->lpszText = L"Reload System";
 					break; 
 				case IDM_MESSAGES_MESSAGEOFTHEDAY :
-					lpttt->lpszText = "Message of the Day";
+					lpttt->lpszText = L"Message of the Day";
 					break;
 				case IDM_HELP_ABOUT :
-					lpttt->lpszText = "About";
+					lpttt->lpszText = L"About";
 					break; 
 				} 
 				break;
@@ -288,10 +289,10 @@ long WINAPI InterfaceWindowProc(HWND hwnd,UINT message,UINT wParam,LONG lParam)
 		case WM_BLAK_LOGON :
 			sessions_logged_on++;
 			/*
-			sprintf(buf,"Connections: %i",sessions_logged_on);
+			sprintf_s(buf,"Connections: %i",sessions_logged_on);
 			SetDlgItemText(HWND_STATUS,IDC_CONNECTIONS_BORDER,buf);
 			*/
-			sprintf(buf,"%3i",sessions_logged_on);
+			sprintf_s(buf,"%3i",sessions_logged_on);
 			SendDlgItemMessage(hwndMain,IDS_STATUS_WINDOW,SB_SETTEXT,1,(LPARAM)buf);
 			
 			InterfaceAddList(lParam);
@@ -302,10 +303,10 @@ long WINAPI InterfaceWindowProc(HWND hwnd,UINT message,UINT wParam,LONG lParam)
 			if (sessions_logged_on < 0)
 				eprintf("InterfaceWindowProc sessions_logged_on just went negative!\n");
 				/*
-				sprintf(buf,"Connections: %i",sessions_logged_on);
+				sprintf_s(buf,"Connections: %i",sessions_logged_on);
 				SetDlgItemText(HWND_STATUS,IDC_CONNECTIONS_BORDER,buf);
 			*/
-			sprintf(buf,"%3i",sessions_logged_on);
+			sprintf_s(buf,"%3i",sessions_logged_on);
 			SendDlgItemMessage(hwndMain,IDS_STATUS_WINDOW,SB_SETTEXT,1,(LPARAM)buf);
 			
 			InterfaceRemoveList(lParam);
@@ -325,7 +326,7 @@ long WINAPI InterfaceWindowProc(HWND hwnd,UINT message,UINT wParam,LONG lParam)
 			break;
 			
 		case WM_BLAK_SIGNAL_CONSOLE :
-			if (PlaySound("signal",hInst,SND_RESOURCE | SND_ASYNC) == FALSE)
+			if (PlaySound(L"signal",hInst,SND_RESOURCE | SND_ASYNC) == FALSE)
 			{
 				MessageBeep(MB_OK);
 				break;
@@ -379,7 +380,7 @@ void InterfaceAddList(int session_id)
 	lvi.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM | LVIF_STATE; 
 	lvi.state = 0; 
 	lvi.stateMask = 0; 
-	lvi.pszText = "  ?";  
+	lvi.pszText = L"  ?";  
 	lvi.iImage = -1;
 	
 	lvi.iItem = index;
@@ -391,14 +392,14 @@ void InterfaceAddList(int session_id)
 	if (s->account == NULL)
 	{
 		/* need braces around this macro to use in an if/else */
-		ListView_SetItemText(hwndLV,index,1,"");
+		ListView_SetItemText(hwndLV,index,1,L"");
 	}
 	else   
-		ListView_SetItemText(hwndLV,index,1,s->account->name);
+		ListView_SetItemText(hwndLV,index,1,(LPWSTR)s->account->name);
 	
-	ListView_SetItemText(hwndLV,index,2,(char *) ShortTimeStr(s->connected_time));
-	ListView_SetItemText(hwndLV,index,3,(char *) GetStateName(s));
-	ListView_SetItemText(hwndLV,index,4,s->conn.name);
+	ListView_SetItemText(hwndLV,index,2, (LPWSTR)ShortTimeStr(s->connected_time));
+	ListView_SetItemText(hwndLV,index,3, (LPWSTR)GetStateName(s));
+	ListView_SetItemText(hwndLV,index,4, (LPWSTR)s->conn.name);
 	
 	LeaveServerLock();
 }
@@ -441,18 +442,18 @@ void InterfaceUpdateList(int session_id)
 	{
 		if (s->account == NULL)
 		{
-			ListView_SetItemText(hwndLV,index,0,"  ?");
-			ListView_SetItemText(hwndLV,index,1,"");
+			ListView_SetItemText(hwndLV,index,0,L"  ?");
+			ListView_SetItemText(hwndLV,index,1,L"");
 		}
 		else
 		{
-			sprintf(buf,"%3i",s->account->account_id);
-			ListView_SetItemText(hwndLV,index,0,buf);
-			ListView_SetItemText(hwndLV,index,1,s->account->name);
+			sprintf_s(buf,"%3i",s->account->account_id);
+			ListView_SetItemText(hwndLV,index,0, (LPWSTR)buf);
+			ListView_SetItemText(hwndLV,index,1, (LPWSTR)s->account->name);
 		}      
-		ListView_SetItemText(hwndLV,index,2,(char *) ShortTimeStr(s->connected_time));
-		ListView_SetItemText(hwndLV,index,3,(char *) GetStateName(s));
-		ListView_SetItemText(hwndLV,index,4,s->conn.name);
+		ListView_SetItemText(hwndLV,index,2, (LPWSTR)ShortTimeStr(s->connected_time));
+		ListView_SetItemText(hwndLV,index,3, (LPWSTR)GetStateName(s));
+		ListView_SetItemText(hwndLV,index,4, (LPWSTR)s->conn.name);
 	}
 	LeaveServerLock();
 	
@@ -513,7 +514,7 @@ void StartAsyncSocketAccept(SOCKET sock,int connection_type)
 	if (connection_type == SOCKET_MAINTENANCE_PORT)
 		window_event = WM_BLAK_SOCKET_MAINTENANCE_ACCEPT;
 	
-	val = WSAAsyncSelect(sock,hwndMain,window_event,FD_ACCEPT);
+	val = WSAEventSelect(sock,hwndMain,FD_ACCEPT);
 	if (val != 0)
 		eprintf("StartAsyncSocketAccept got error %i\n",val);
 }
@@ -523,6 +524,7 @@ HANDLE StartAsyncNameLookup(char *peer_addr,char *buf)
 {
 	HANDLE ret_val;
 	
+	/*TODO: Replace with GetNameInfoW()*/
 	ret_val = WSAAsyncGetHostByAddr(hwndMain,WM_BLAK_SOCKET_NAME_LOOKUP,
 		peer_addr,4,PF_INET,buf,MAXGETHOSTSTRUCT);
 	if (ret_val == 0)
@@ -536,7 +538,7 @@ void StartAsyncSession(session_node *s)
 {
 	int val;
 	
-	val = WSAAsyncSelect(s->conn.socket,hwndMain,WM_BLAK_SOCKET_SELECT,
+	val = WSAEventSelect(s->conn.socket,hwndMain,
 		FD_CLOSE | FD_WRITE | FD_READ);
 	if (val != 0)
 		eprintf("StartAsyncSocketSelect got error %i\n",val);
@@ -549,7 +551,7 @@ void StartupPrintf(const char *fmt,...)
 	va_list marker;
 	
 	va_start(marker,fmt);
-	vsprintf(s,fmt,marker);
+	vsprintf_s(s,fmt,marker);
 	
 	
 	if (strlen(s) > 0)
@@ -559,7 +561,7 @@ void StartupPrintf(const char *fmt,...)
 	}
 	va_end(marker);
 	
-	Edit_SetText(GetDlgItem(HWND_STATUS,IDC_STARTUP_TEXT),s);
+	Edit_SetText(GetDlgItem(HWND_STATUS,IDC_STARTUP_TEXT),(LPCWSTR)s);
 }
 
 void StartupComplete()
@@ -579,7 +581,7 @@ void StartupComplete()
 	console_session_id = s->session_id;
 	
 	
-	if (Edit_GetText(GetDlgItem(HWND_STATUS,IDC_STARTUP_TEXT),str,sizeof(str)) == 0)
+	if (Edit_GetText(GetDlgItem(HWND_STATUS,IDC_STARTUP_TEXT), (LPWSTR)str,sizeof(str)) == 0)
 		StartupPrintf("No errors on startup\n");
 	
 	SendDlgItemMessage(hwndMain,IDC_TOOLBAR,TB_ENABLEBUTTON,IDM_FILE_EXIT,MAKELPARAM(TRUE,0));
@@ -593,7 +595,7 @@ void StartupComplete()
 
 void InterfaceCreate(HWND hwnd,UINT wParam,LONG lParam)
 {
-	SetWindowText(hwnd,BlakServNameString());
+	SetWindowText(hwnd, (LPCWSTR)BlakServNameString());
 }
 
 void InterfaceCreateTabControl(HWND hwnd) 
@@ -608,25 +610,25 @@ void InterfaceCreateTabControl(HWND hwnd)
 	
     tie.mask = TCIF_TEXT | TCIF_IMAGE; 
     tie.iImage = -1; 
-    tie.pszText = s;
+    tie.pszText = (LPWSTR)s;
 	
-    tie.pszText = "&Status";
+    tie.pszText = L"&Status";
     TabCtrl_InsertItem(hwndTab,0, &tie);
-    tie.pszText = "&Channels";
+    tie.pszText = L"&Channels";
     TabCtrl_InsertItem(hwndTab,1, &tie);
-    tie.pszText = "&Administration";
+    tie.pszText = L"&Administration";
     TabCtrl_InsertItem(hwndTab,2, &tie);
 	
     tab_pages[0] = CreateDialog(hInst,MAKEINTRESOURCE(IDD_TAB_PAGE_STATUS),hwndTab,
-		InterfaceDialogTabPage);
+		(DLGPROC)InterfaceDialogTabPage);
     tab_pages[1] = CreateDialog(hInst,MAKEINTRESOURCE(IDD_TAB_PAGE_CHANNELS),hwndTab,
-		InterfaceDialogTabPage);
+		(DLGPROC)InterfaceDialogTabPage);
     tab_pages[2] = CreateDialog(hInst,MAKEINTRESOURCE(IDD_TAB_PAGE_ADMINISTRATION),hwndTab,
-		InterfaceDialogTabPage);
+		(DLGPROC)InterfaceDialogTabPage);
 	
     /* keep about box page ready */
     tab_about = CreateDialog(hInst,MAKEINTRESOURCE(IDD_ABOUT),hwnd,
-			     InterfaceDialogAbout);
+		(DLGPROC)InterfaceDialogAbout);
 	
 	
     /* set admin page font */
@@ -647,7 +649,7 @@ void InterfaceCreateTabControl(HWND hwnd)
     lf.lfClipPrecision = 2;
     lf.lfQuality = 1;
     lf.lfPitchAndFamily = 49;
-    strcpy(lf.lfFaceName,"Terminal");
+    strcpy_s((char*)lf.lfFaceName, strlen((char*)lf.lfFaceName),"Terminal");
     
     font = CreateFontIndirect(&lf);
     if (font != NULL)
@@ -780,7 +782,7 @@ void InterfaceSetup()
 	
 	ShowWindow(hwndTB,SW_SHOW);
 	
-	CreateStatusWindow(WS_CHILD | WS_VISIBLE,"",hwndMain,IDS_STATUS_WINDOW);
+	CreateStatusWindow(WS_CHILD | WS_VISIBLE,L"",hwndMain,IDS_STATUS_WINDOW);
 	GetClientRect(hwndMain,&rcClient); 
 	status_widths[0] = rcClient.right - STATUS_CONNECTION_WIDTH;
 	status_widths[1] = rcClient.right - 1;
@@ -803,27 +805,27 @@ void InterfaceCreateListControl()
 	
 	/* make the columns */
 	
-	lvc.pszText = "#";
+	lvc.pszText = L"#";
 	lvc.iSubItem = 0;
 	lvc.cx = 29; 
 	ListView_InsertColumn(hwndLV,0,&lvc);
 	
-	lvc.pszText = "Name";
+	lvc.pszText = L"Name";
 	lvc.iSubItem = 1;
 	lvc.cx = 113; 
 	ListView_InsertColumn(hwndLV,1,&lvc);
 	
-	lvc.pszText = "Since";
+	lvc.pszText = L"Since";
 	lvc.iSubItem = 2;
 	lvc.cx = 80; 
 	ListView_InsertColumn(hwndLV,2,&lvc);
 	
-	lvc.pszText = "State";
+	lvc.pszText = L"State";
 	lvc.iSubItem = 3;
 	lvc.cx = 118; 
 	ListView_InsertColumn(hwndLV,3,&lvc);
 	
-	lvc.pszText = "From";
+	lvc.pszText = L"From";
 	lvc.iSubItem = 4;
 	lvc.cx = 127; 
 	ListView_InsertColumn(hwndLV,4,&lvc);
@@ -873,7 +875,7 @@ void InterfaceCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		InterfaceReloadSystem();
 		return;
 	case IDM_MESSAGES_MESSAGEOFTHEDAY :
-		DialogBox(hInst,MAKEINTRESOURCE(IDD_MOTD),hwnd,InterfaceDialogMotd);    
+		DialogBox(hInst,MAKEINTRESOURCE(IDD_MOTD),hwnd,(DLGPROC)InterfaceDialogMotd);
 		return;
 	case IDM_HELP_ABOUT :
 		ShowWindow(tab_about,TRUE);
@@ -890,26 +892,26 @@ void InterfaceDrawText(HWND hwnd)
 	
 	if (TryEnterServerLock())
 	{
-		sprintf(s,"%lu bytes",GetMemoryTotal());
-		SetDlgItemText(HWND_STATUS,IDC_MEMORY_VALUE,s);
+		sprintf_s(s,"%lu bytes",GetMemoryTotal());
+		SetDlgItemText(HWND_STATUS,IDC_MEMORY_VALUE, (LPCWSTR)s);
 		
 		kstat = GetKodStats();
-		sprintf(s,"%s",TimeStr(kstat->system_start_time));
-		SetDlgItemText(HWND_STATUS,IDC_STARTED_VALUE,s);
+		sprintf_s(s,"%s",TimeStr(kstat->system_start_time));
+		SetDlgItemText(HWND_STATUS,IDC_STARTED_VALUE, (LPCWSTR)s);
 		
-		sprintf(s,"%-200s",RelativeTimeStr(GetTime()-kstat->system_start_time));
-		SetDlgItemText(HWND_STATUS,IDC_UP_FOR_VALUE,s);
+		sprintf_s(s,"%-200s",RelativeTimeStr(GetTime()-kstat->system_start_time));
+		SetDlgItemText(HWND_STATUS,IDC_UP_FOR_VALUE, (LPCWSTR)s);
 		
 		if (kstat->interpreting_time/1000.0 < 0.01) 
-			sprintf(s,"0/second");
+			sprintf_s(s,"0/second");
 		else
-			sprintf(s,"%i/second",(int)(kstat->num_interpreted/(kstat->interpreting_time/1000.0)));
-		SetDlgItemText(HWND_STATUS,IDC_SPEED_VALUE,s);
+			sprintf_s(s,"%i/second",(int)(kstat->num_interpreted/(kstat->interpreting_time/1000.0)));
+		SetDlgItemText(HWND_STATUS,IDC_SPEED_VALUE, (LPCWSTR)s);
 		
 		if (IsGameLocked())
-			SetDlgItemText(hwndMain,IDC_GAME_LOCKED,"The game is locked.");
+			SetDlgItemText(hwndMain,IDC_GAME_LOCKED,L"The game is locked.");
 		else
-			SetDlgItemText(hwndMain,IDC_GAME_LOCKED,"");
+			SetDlgItemText(hwndMain,IDC_GAME_LOCKED,L"");
 		
 		SetDlgItemInt(HWND_STATUS,IDC_OBJECTS_VALUE,GetObjectsUsed(),FALSE);
 		SetDlgItemInt(HWND_STATUS,IDC_LISTNODES_VALUE,GetListNodesUsed(),FALSE);
@@ -945,8 +947,6 @@ void InterfaceCheckChannels()
 			break;
 		default:
 			hwndList = GetDlgItem(HWND_CHANNEL,IDC_DEBUG_LIST);
-			break;
-			hwndList = NULL; 
 			break;
 		}
 
@@ -1083,7 +1083,7 @@ BOOL CALLBACK InterfaceDialogMotd(HWND hwnd,UINT message,UINT wParam,LONG lParam
 		Edit_LimitText(GetDlgItem(hwnd,IDC_MOTD),sizeof(s)-1);
 		
 		EnterServerLock();
-		Edit_SetText(GetDlgItem(hwnd,IDC_MOTD),GetMotd());
+		Edit_SetText(GetDlgItem(hwnd,IDC_MOTD), (LPCWSTR)GetMotd());
 		LeaveServerLock();
 		
 		return TRUE;
@@ -1092,7 +1092,7 @@ BOOL CALLBACK InterfaceDialogMotd(HWND hwnd,UINT message,UINT wParam,LONG lParam
 		switch (wParam)
 		{
 		case IDOK :
-			Edit_GetText(GetDlgItem(hwnd,IDC_MOTD),s,sizeof(s)-1);
+			Edit_GetText(GetDlgItem(hwnd,IDC_MOTD), (LPWSTR)s,sizeof(s)-1);
 			
 			EnterServerLock();
 			SetMotd(s);
@@ -1118,7 +1118,7 @@ BOOL CALLBACK InterfaceDialogAbout(HWND hwnd,UINT message,UINT wParam,LONG lPara
 		is_about = True;
 		
 		SetWindowPos(hwnd,HWND_TOP,7,54,0,0,SWP_NOSIZE);
-		SetWindowText(GetDlgItem(hwnd,IDC_ABOUT_TITLE),BlakServLongVersionString());
+		SetWindowText(GetDlgItem(hwnd,IDC_ABOUT_TITLE), (LPCWSTR)BlakServLongVersionString());
 		return TRUE;
 		
 	case WM_COMMAND :
@@ -1141,7 +1141,7 @@ BOOL CALLBACK InterfaceDialogTabPage(HWND hwnd,UINT message,UINT wParam,LONG lPa
 		SetWindowPos(hwnd,HWND_TOP,7,24,0,0,SWP_NOSIZE);
 		return TRUE;
 		
-		HANDLE_MSG(hwnd,WM_COMMAND,InterfaceTabPageCommand);
+		HANDLE_MSG(hwnd,WM_COMMAND, InterfaceTabPageCommand);
 		
 	}
 	return FALSE;
@@ -1158,7 +1158,7 @@ void InterfaceTabPageCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		if (id == IDC_LOG_LIST || id == IDC_ERROR_LIST || id == IDC_DEBUG_LIST)
 		{
 			ListBox_GetText(hwndCtl,ListBox_GetCurSel(hwndCtl),s);
-			MessageBox(hwndMain,s,BlakServNameString(),MB_OK | MB_ICONINFORMATION);
+			MessageBox(hwndMain, (LPCWSTR)s, (LPCWSTR)BlakServNameString(),MB_OK | MB_ICONINFORMATION);
 		}
 		break;
 	}
@@ -1177,7 +1177,7 @@ long CALLBACK InterfaceAdminInputProc(HWND hwnd, UINT message, UINT wParam, LONG
 			{
 				/* make sure we've started already, so that session id is valid */
 				Edit_SetSel(hwnd,0,-1);
-				Edit_GetText(hwnd,buf,sizeof buf);
+				Edit_GetText(hwnd, (LPWSTR)buf,sizeof buf);
 				cprintf(console_session_id,"%s\n",buf);
 				
 				EnterServerLock();
@@ -1257,7 +1257,7 @@ void InterfaceUpdateAdmin()
 	
 	SetWindowRedraw(hwnd,FALSE);
 	
-	Edit_SetText(hwnd,admin_response_buf);
+	Edit_SetText(hwnd, (LPCWSTR)admin_response_buf);
    SendMessage(hwnd, WM_VSCROLL, SB_BOTTOM, 0);
 	
 	SetWindowRedraw(hwnd,TRUE);
@@ -1268,8 +1268,8 @@ void FatalErrorShow(const char *filename,int line,const char *str)
 {
 	char s[5000];
 	
-	sprintf(s,"File %s line %i\r\n\r\n%s",filename,line,str);
-	MessageBox(hwndMain,s,"Fatal Error",MB_ICONSTOP);
+	sprintf_s(s,"File %s line %i\r\n\r\n%s",filename,line,str);
+	MessageBox(hwndMain, (LPCWSTR)s,L"Fatal Error",MB_ICONSTOP);
 	
 	exit(1);
 }

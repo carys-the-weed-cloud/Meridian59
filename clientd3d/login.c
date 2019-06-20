@@ -250,7 +250,7 @@ Bool GetLogin(void)
    else
    {
       logged_in = False;
-      if (DialogBox(hInst, MAKEINTRESOURCE(IDD_LOGIN), hMain, LoginDialogProc) == IDCANCEL)
+      if (DialogBox(hInst, MAKEINTRESOURCE(IDD_LOGIN), hMain, (DLGPROC)LoginDialogProc) == IDCANCEL)
 	 return False;
       // Go into admin mode if control key is held down
       admin_mode = (GetKeyState(VK_CONTROL) < 0);

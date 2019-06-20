@@ -26,11 +26,11 @@ typedef struct {
 
 // Window handles of modeless dialogs, one per tab
 TabPage tab_pages[] = {
-{ IDS_CHAR_NAME,      IDD_CHARNAME,       CharNameDialogProc,   True, },
-{ IDS_CHARAPPEARANCE, IDD_CHARAPPEARANCE, CharFaceDialogProc,   True, },
-{ IDS_CHARSTATS,      IDD_CHARSTATS,      CharStatsDialogProc,  True, },
-{ IDS_CHARSPELLS,     IDD_CHARSPELLS,     CharSpellsDialogProc, False, },
-{ IDS_CHARSKILLS,     IDD_CHARSKILLS,     CharSkillsDialogProc, False, },
+{ IDS_CHAR_NAME,      IDD_CHARNAME,       (DLGPROC)CharNameDialogProc,   True, },
+{ IDS_CHARAPPEARANCE, IDD_CHARAPPEARANCE, (DLGPROC)CharFaceDialogProc,   True, },
+{ IDS_CHARSTATS,      IDD_CHARSTATS,      (DLGPROC)CharStatsDialogProc,  True, },
+{ IDS_CHARSPELLS,     IDD_CHARSPELLS,     (DLGPROC)CharSpellsDialogProc, False, },
+{ IDS_CHARSKILLS,     IDD_CHARSKILLS,     (DLGPROC)CharSkillsDialogProc, False, },
 };
 
 #define NUM_TAB_PAGES (sizeof(tab_pages) / sizeof(TabPage))

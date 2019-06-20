@@ -52,7 +52,7 @@ void StartupInit(int final_state)
 
    /* Set timer to keep writing initial string to server */
    WriteServer((char *) client_string1, INITSTR_LENGTH);
-   timer_id = SetTimer(NULL, 0, BEACON_INTERVAL, StartupTimerProc);
+   timer_id = SetTimer(NULL, 0, BEACON_INTERVAL, (TIMERPROC)StartupTimerProc);
    if (timer_id == 0)
    {
       ClientError(hInst, hMain, IDS_NOTIMERS);

@@ -269,10 +269,6 @@ void DrawWindowBackgroundBorder(RawBitmap *bg,
    DrawWindowBackgroundColor(bg, hdc, &r, xin + r.left - area->x, yin + r.top - area->y, index);
 }
 /************************************************************************/
-void DrawChangeColor(void)
-{
-}
-/************************************************************************/
 /*
  * CreateMemBitmap:  Create a bitmap, select it into a new memory DC,
  *   and return the DC.  Also set the palette of the bitmap.
@@ -317,7 +313,7 @@ HDC CreateMemBitmap(int width, int height, HBITMAP *gOldBitmap, BYTE **gBits)
    return gDC;
 }
 /************************************************************************/
-Bool DrawInitialize(void)
+Bool DrawInitialize()
 {
    if (InitializeGraphics3D() == False)
       return False;
@@ -325,7 +321,7 @@ Bool DrawInitialize(void)
    CacheInitialize();
    DrawBitmapInitialize();
 
-   DrawChangeColor();
+   //DrawChangeColor();
 
    MapInitialize();
 
@@ -336,7 +332,7 @@ Bool DrawInitialize(void)
    return True;
 }
 /************************************************************************/
-void DrawClose(void)
+void DrawClose()
 {
    FreeBitmaps();
 
@@ -344,80 +340,4 @@ void DrawClose(void)
 
    CloseGraphics3D();
    MapClose();
-}
-
-void DrawTransparentBytes(BYTE *dest, const BYTE *src, int count)
-{
-   __asm
-   {
-      mov   ecx, count;
-      cmp   ecx, 0;
-      je    END_DRAW_TRANSPARENT_BYTES;
-      mov   ebx, TRANSPARENT_INDEX;
-      mov   esi, src;
-      mov   edi, dest;
-      cmp   ecx, 4;
-      jl    DO_LESS_THAN_4;
-TRANSPARENT0:
-      mov   al, BYTE PTR [esi];
-      cmp   al, bl;
-      jne   SOLID0;
-TRANSPARENT1:
-      mov   al, BYTE PTR [esi+1];
-      cmp   al, bl;
-      jne   SOLID1;
-TRANSPARENT2:
-      mov   al, BYTE PTR [esi+2];
-      cmp   al, bl;
-      jne   SOLID2;
-TRANSPARENT3:
-      mov   al, BYTE PTR [esi+3];
-      cmp   al, bl;
-      jne   SOLID3;
-      jmp   DONE4;
-SOLID0:
-      mov   BYTE PTR [edi],al;
-      mov   al, BYTE PTR [esi+1];
-      cmp   al, bl;
-      je    TRANSPARENT1;
-SOLID1:
-      mov   BYTE PTR [edi+1],al;
-      mov   al, BYTE PTR [esi+2];
-      cmp   al, bl;
-      je    TRANSPARENT2;
-SOLID2:
-      mov   BYTE PTR [edi+2],al;
-      mov   al, BYTE PTR [esi+3];
-      cmp   al, bl;
-      je    TRANSPARENT3;
-SOLID3:
-      mov   BYTE PTR [edi+3],al;
-DONE4:
-      add   esi,4;
-      add   edi,4;
-      sub   ecx,4;
-      jz    END_DRAW_TRANSPARENT_BYTES;
-      cmp   ecx,4;
-      jge   TRANSPARENT0;
-DO_LESS_THAN_4:
-      mov   al, BYTE PTR [esi];
-      cmp   al, bl;
-      je    CHECK1;
-      mov   BYTE PTR [edi],al;
-      dec   ecx;
-      jz    END_DRAW_TRANSPARENT_BYTES;
-CHECK1:
-      mov   al, BYTE PTR [esi+1];
-      cmp   al, bl;
-      je    CHECK2;
-      mov   BYTE PTR [edi+1],al;
-      dec   ecx;
-      jz    END_DRAW_TRANSPARENT_BYTES;
-CHECK2:
-      mov   al, BYTE PTR [esi+2];
-      cmp   al, bl;
-      je    END_DRAW_TRANSPARENT_BYTES;
-      mov   BYTE PTR [edi+2],al;
-END_DRAW_TRANSPARENT_BYTES:
-   }
 }
